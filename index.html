@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"/>
+<title>Nex-In</title>
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#2D2926"/>
+<link rel="icon" href="icon-192.png"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+
+<!-- iOS standalone app behavior -->
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Nex-In"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #F7F4F0;
+  --surface:   #FFFFFF;
+  --surface2:  rgba(255,255,255,0.82);
+  --border:    rgba(180,170,160,0.22);
+  --shadow-sm: 0 2px 8px rgba(100,90,80,0.08);
+  --shadow-md: 0 8px 28px rgba(100,90,80,0.12);
+  --shadow-lg: 0 20px 56px rgba(100,90,80,0.16);
+  --text:      #1C1917;
+  --text2:     #78716C;
+  --text3:     #A8A29E;
+  --accent:    #2D2926;
+  --accent2:   #6B5E52;
+  --gold:      #C9A96E;
+  --gold2:     #E8D5B0;
+  --danger:    #C0392B;
+  --r-sm:      12px;
+  --r-md:      18px;
+  --r-lg:      24px;
+  --r-xl:      32px;
+  --tab-h:     80px;
+  --header-h:  60px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overscroll-behavior-y: contain;
+  padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px) + 20px);
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; color: inherit; background: none; border: none; outline: none; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+.hidden { display: none !important; }
+
+/* ── Utility ── */
+.surface  { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); box-shadow: var(--shadow-sm); }
+.surface2 { background: var(--surface2); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.7); border-radius: var(--r-lg); box-shadow: var(--shadow-md); }
+.flex     { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2  { gap: 8px; }
+.gap-3  { gap: 12px; }
+.gap-4  { gap: 16px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.w-full { width: 100%; }
+.wrap   { flex-wrap: wrap; }
+
+/* ── Typography ── */
+.serif   { font-family: 'DM Serif Display', Georgia, serif; }
+.t-xs    { font-size: 11px; line-height: 1.5; }
+.t-sm    { font-size: 13px; line-height: 1.5; }
+.t-base  { font-size: 15px; line-height: 1.5; }
+.t-lg    { font-size: 18px; line-height: 1.3; }
+.t-xl    { font-size: 22px; line-height: 1.2; }
+.t-2xl   { font-size: 28px; line-height: 1.1; }
+.t-3xl   { font-size: 36px; line-height: 1.05; }
+.fw-4    { font-weight: 400; }
+.fw-5    { font-weight: 500; }
+.fw-6    { font-weight: 600; }
+.fw-7    { font-weight: 700; }
+.fw-8    { font-weight: 800; }
+.c-muted { color: var(--text2); }
+.c-faint { color: var(--text3); }
+.c-gold  { color: var(--gold); }
+.c-accent{ color: var(--accent); }
+.text-center { text-align: center; }
+
+/* ── Inputs ── */
+.field {
+  width: 100%; padding: 15px 16px;
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  font-size: 16px; /* prevents iOS zoom */
+  transition: border-color .15s, box-shadow .15s;
+}
+.field:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,110,0.15); }
+.field-label { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text2); margin-bottom: 7px; display: block; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 15px 20px; border-radius: var(--r-md);
+  font-size: 15px; font-weight: 700; letter-spacing: .01em;
+  transition: transform .12s, box-shadow .12s, filter .12s;
+  white-space: nowrap;
+}
+.btn:active { transform: scale(.97); }
+.btn-dark {
+  background: var(--accent); color: #fff;
+  box-shadow: 0 8px 24px rgba(29,23,19,0.28);
+}
+.btn-dark:active { box-shadow: 0 4px 12px rgba(29,23,19,0.2); }
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), #b8914f);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(201,169,110,0.35);
+}
+.btn-ghost {
+  background: var(--surface); color: var(--text);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.btn-ghost:active { background: var(--bg); }
+.btn-danger { background: #FEF2F2; color: var(--danger); border: 1.5px solid rgba(192,57,43,0.2); }
+.btn-sm { padding: 10px 14px; font-size: 13px; border-radius: var(--r-sm); }
+.btn-xs { padding: 7px 12px; font-size: 12px; font-weight: 700; border-radius: 10px; }
+.btn-icon {
+  width: 42px; height: 42px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-sm);
+}
+.btn-icon svg { width: 20px; height: 20px; stroke: var(--text2); }
+
+/* ── Chips / Pills ── */
+.chip {
+  padding: 9px 15px; border-radius: 999px;
+  font-size: 13px; font-weight: 600;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text2);
+  transition: all .15s;
+}
+.chip:active { transform: scale(.97); }
+.chip.on {
+  background: var(--accent); color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(29,23,19,0.2);
+}
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text2);
+}
+.badge-gold { background: rgba(201,169,110,.12); border-color: rgba(201,169,110,.3); color: #8B6914; }
+
+/* ── Header ── */
+.header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--header-h);
+  background: rgba(247,244,240,0.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 20px;
+}
+.brand-logo {
+  height: 22px; width: auto; display: block;
+  filter: drop-shadow(0 1px 2px rgba(45,41,38,0.12));
+}
+.brand-logo-wrap {
+  position: relative; display: inline-block; overflow: hidden;
+}
+.brand-logo-wrap::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(201,169,110,0.55) 50%, transparent 65%);
+  background-size: 250% 100%;
+  mix-blend-mode: overlay;
+  animation: sheen 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes sheen { 0%,100% { background-position: 160% 0; } 50% { background-position: -60% 0; } }
+
+/* ── Tab bar ── */
+.tabbar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  height: calc(var(--tab-h) + env(safe-area-inset-bottom, 0px));
+  background: rgba(247,244,240,0.96);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--border);
+  display: grid; grid-template-columns: repeat(4,1fr);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.tab-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; padding: 0 4px;
+  font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--text3); transition: color .15s;
+}
+.tab-item.active { color: var(--accent); }
+.tab-item svg { width: 22px; height: 22px; }
+.tab-dot {
+  width: 4px; height: 4px; border-radius: 999px;
+  background: var(--gold); margin-top: -2px;
+  transition: opacity .15s;
+}
+
+/* ── Main content ── */
+main { padding-top: calc(var(--header-h) + 16px); padding-left: 16px; padding-right: 16px; }
+.page-gap { display: flex; flex-direction: column; gap: 14px; padding-bottom: 16px; }
+
+/* ── Product grid ── */
+.prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.prod-card { border-radius: var(--r-lg); overflow: hidden; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform .15s; }
+.prod-card:active { transform: scale(.98); }
+.prod-card-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; background: #F0EBE5; }
+.prod-card-body { padding: 12px; }
+.prod-card-brand { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text3); margin-bottom: 3px; }
+.prod-card-name { font-size: 13px; font-weight: 600; line-height: 1.35; margin-bottom: 8px; color: var(--text); }
+.prod-card-price { font-size: 15px; font-weight: 800; color: var(--accent); }
+.prod-card-off  { font-size: 11px; font-weight: 600; color: var(--gold); margin-left: 4px; }
+
+/* ── Section header ── */
+.section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+.section-title { font-size: 18px; font-weight: 700; color: var(--text); }
+
+/* ── Hero banner ── */
+.hero-banner {
+  border-radius: var(--r-xl);
+  background: linear-gradient(145deg, var(--accent) 0%, #3D332C 60%, var(--accent2) 100%);
+  color: #fff; padding: 24px 20px; position: relative; overflow: hidden;
+}
+.hero-banner::before {
+  content: ''; position: absolute; top: -40px; right: -40px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: rgba(201,169,110,0.12);
+}
+.hero-banner::after {
+  content: ''; position: absolute; bottom: -60px; left: -20px;
+  width: 220px; height: 220px; border-radius: 50%;
+  background: rgba(201,169,110,0.07);
+}
+
+/* ── KPI row ── */
+.kpi-strip { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+.kpi-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px; box-shadow: var(--shadow-sm); }
+.kpi-num { font-size: 20px; font-weight: 800; color: var(--text); }
+.kpi-lab { font-size: 11px; color: var(--text3); margin-top: 3px; font-weight: 600; }
+
+/* ── Price row ── */
+.price-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; border-radius: var(--r-md);
+  background: var(--bg); border: 1px solid var(--border);
+}
+.price-row-best {
+  background: rgba(201,169,110,0.08); border-color: rgba(201,169,110,0.3);
+}
+
+/* ── Size pills ── */
+.size-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.size-pill {
+  padding: 9px 14px; border-radius: 999px;
+  font-size: 13px; font-weight: 700;
+  border: 1.5px solid var(--border); background: var(--surface);
+  color: var(--text2);
+}
+.size-pill.rec {
+  background: var(--accent); color: #fff; border-color: transparent;
+  box-shadow: 0 4px 12px rgba(29,23,19,0.2);
+}
+
+/* ── Search bar ── */
+.search-wrap { position: relative; }
+.search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; stroke: var(--text3); pointer-events: none; }
+.search-field { width: 100%; padding: 13px 16px 13px 42px; border-radius: var(--r-md); border: 1.5px solid var(--border); background: var(--surface); font-size: 15px; box-shadow: var(--shadow-sm); transition: border-color .15s; }
+.search-field:focus { border-color: var(--gold); }
+
+/* ── Notify panel ── */
+.notify-panel {
+  position: absolute; top: 52px; right: 0;
+  width: min(360px, calc(100vw - 32px));
+  max-height: 72vh; overflow-y: auto;
+  z-index: 200;
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  padding: 8px;
+}
+.notify-item { padding: 12px 14px; border-radius: var(--r-md); }
+.notify-item + .notify-item { border-top: 1px solid var(--border); }
+.notify-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.notify-body  { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+/* ── Auth page ── */
+.auth-page { min-height: 100vh; display: flex; flex-direction: column; padding: 0 24px 48px; padding-top: env(safe-area-inset-top, 0px); }
+.auth-logo-area { padding-top: 56px; padding-bottom: 32px; text-align: center; }
+.auth-logo-img { height: 56px; width: auto; margin: 0 auto; display: block; filter: drop-shadow(0 4px 16px rgba(45,41,38,0.18)); }
+.auth-subtitle { font-size: 16px; color: var(--text2); margin-top: 6px; font-weight: 400; }
+.auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-xl); box-shadow: var(--shadow-lg); padding: 28px 24px 32px; }
+.auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--bg); border-radius: 14px; padding: 5px; margin-bottom: 24px; }
+.auth-tab { padding: 11px; border-radius: 11px; font-size: 14px; font-weight: 700; color: var(--text2); text-align: center; transition: all .15s; }
+.auth-tab.active { background: var(--surface); color: var(--accent); box-shadow: var(--shadow-sm); }
+.form-stack { display: flex; flex-direction: column; gap: 16px; }
+.error-box { background: #FEF2F2; border: 1px solid rgba(192,57,43,0.2); border-radius: var(--r-md); padding: 12px 14px; font-size: 13px; color: var(--danger); }
+.auth-features { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 20px; }
+.auth-feat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); padding: 14px 10px; text-align: center; box-shadow: var(--shadow-sm); }
+.auth-feat-icon { font-size: 22px; line-height: 1; margin-bottom: 8px; }
+.auth-feat-label { font-size: 11px; font-weight: 700; color: var(--text2); }
+
+/* ── Onboarding ── */
+.onboard-overlay { position: fixed; inset: 0; z-index: 300; background: var(--bg); overflow-y: auto; padding: 0 20px 40px; }
+.progress-bar { height: 3px; background: var(--border); border-radius: 999px; overflow: hidden; margin-bottom: 24px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--accent2)); border-radius: 999px; transition: width .3s ease; }
+.hint-box { background: rgba(201,169,110,.1); border: 1px solid rgba(201,169,110,.25); border-radius: var(--r-md); padding: 12px 14px; font-size: 13px; color: #7A5B20; line-height: 1.5; }
+
+/* ── Profile ── */
+.profile-info-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
+.profile-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 18px; border-bottom: 1px solid var(--border); }
+.profile-row:last-of-type { border-bottom: none; }
+.profile-row-label { font-size: 13px; color: var(--text2); }
+.profile-row-value { font-size: 13px; font-weight: 600; text-align: right; max-width: 60%; word-break: break-all; }
+.profile-avatar { width: 56px; height: 56px; border-radius: 999px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; font-weight: 800; flex-shrink: 0; }
+.edit-link { display: flex; align-items: center; gap: 6px; padding: 14px 18px; font-size: 13px; font-weight: 700; color: var(--gold); border-top: 1px solid var(--border); cursor: pointer; }
+
+/* ── Tracker / Wardrobe item ── */
+.item-row { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px; box-shadow: var(--shadow-sm); display: flex; gap: 12px; align-items: center; }
+.item-thumb { width: 68px; height: 68px; border-radius: var(--r-md); object-fit: cover; background: #F0EBE5; flex-shrink: 0; }
+.item-info { flex: 1; min-width: 0; }
+.item-brand { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--text3); }
+.item-name  { font-size: 14px; font-weight: 700; line-height: 1.3; margin: 2px 0 4px; }
+.item-price { font-size: 13px; font-weight: 600; color: var(--gold); }
+
+/* ── Empty state ── */
+.empty-state { padding: 48px 24px; text-align: center; }
+.empty-icon { font-size: 40px; margin-bottom: 14px; }
+.empty-title { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+.empty-sub   { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+/* ── Premium card ── */
+.premium-card { background: linear-gradient(145deg, var(--accent) 0%, #3D332C 100%); border-radius: var(--r-lg); padding: 20px; color: #fff; }
+.premium-feature { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r-md); padding: 14px; }
+.premium-feature-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.premium-feature-desc  { font-size: 12px; color: rgba(255,255,255,.6); line-height: 1.5; }
+
+/* ── Separator ── */
+.sep { border: none; border-top: 1px solid var(--border); }
+
+/* ── Toast ── */
+#toast {
+  position: fixed; bottom: calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 16px); left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--accent); color: #fff;
+  padding: 12px 22px; border-radius: 999px;
+  font-size: 13px; font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  opacity: 0; transition: opacity .2s, transform .2s;
+  pointer-events: none; white-space: nowrap; z-index: 500;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── Install banner ── */
+#install-banner {
+  position: fixed; left: 14px; right: 14px;
+  bottom: calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 12px);
+  z-index: 400;
+  background: var(--accent); color: #fff;
+  border-radius: var(--r-lg);
+  padding: 14px 14px 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  transform: translateY(120%); transition: transform .3s ease;
+}
+#install-banner.show { transform: translateY(0); }
+#install-banner .ib-icon { width:38px;height:38px;border-radius:11px;flex-shrink:0; }
+#install-banner .ib-text { flex:1; min-width:0; }
+#install-banner .ib-title { font-size:13px; font-weight:700; }
+#install-banner .ib-sub { font-size:11px; color:rgba(255,255,255,.6); margin-top:1px; }
+#install-banner button.ib-install { background:var(--gold); color:#fff; font-size:12px; font-weight:700; padding:9px 14px; border-radius:10px; flex-shrink:0; }
+#install-banner button.ib-close { width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-size:16px;flex-shrink:0;display:grid;place-items:center; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<div id="install-banner">
+  <img class="ib-icon" src="icon-192.png" alt="Nex-In"/>
+  <div class="ib-text">
+    <div class="ib-title">Install Nex-In</div>
+    <div class="ib-sub">Add to your home screen for the full app experience</div>
+  </div>
+  <button class="ib-install" id="ib-install-btn">Install</button>
+  <button class="ib-close" id="ib-close-btn">×</button>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ─── Storage keys ─── */
+const K = {
+  accounts: 'ni_accounts',
+  session:  'ni_session',
+  pfx_profile:   'ni_pf_',
+  pfx_tracker:   'ni_tr_',
+  pfx_wardrobe:  'ni_wd_',
+  pfx_onboarded: 'ni_ob_',
+  pfx_premium:   'ni_pr_'
+};
+
+function lsGet(key, fb){ try{ const v=localStorage.getItem(key); return v!==null ? JSON.parse(v) : fb; }catch(e){ return fb; } }
+function lsSet(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
+function lsDel(key){ try{ localStorage.removeItem(key); }catch(e){} }
+
+/* ─── Currency config ─── */
+const CURRENCY = {
+  IN:{ sym:'₹',  code:'INR', locale:'en-IN' },
+  US:{ sym:'$',  code:'USD', locale:'en-US' },
+  GB:{ sym:'£',  code:'GBP', locale:'en-GB' },
+  EU:{ sym:'€',  code:'EUR', locale:'de-DE' },
+  AE:{ sym:'د.إ',code:'AED', locale:'ar-AE' },
+  AU:{ sym:'A$', code:'AUD', locale:'en-AU' },
+  CA:{ sym:'CA$',code:'CAD', locale:'en-CA' }
+};
+const COUNTRIES = [
+  ['IN','India (₹ INR)'],['US','United States ($ USD)'],['GB','United Kingdom (£ GBP)'],
+  ['EU','Europe – EU (€ EUR)'],['AE','UAE (د.إ AED)'],['AU','Australia (A$ AUD)'],['CA','Canada (CA$ CAD)']
+];
+
+function fmtMoney(n, country){
+  const c = CURRENCY[country] || CURRENCY.IN;
+  const num = Number(n);
+  if(c.code==='INR') return '₹'+num.toLocaleString('en-IN');
+  return c.sym + num.toLocaleString('en-US');
+}
+
+/* ─── Products ─── */
+const PRODUCTS = [
+  {
+    id:1, name:'Minimalist Leather Tote', brand:'Miraggio', category:'Bags', type:'accessory',
+    image:'https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg',
+    desc:'Structured leather tote with clean lines and everyday utility.',
+    sizes:['One Size'],
+    prices:{
+      IN:[{pl:'Myntra',p:3499,o:4999},{pl:'Ajio',p:3550,o:4999},{pl:'Tata Cliq',p:3499,o:4999}],
+      US:[{pl:'Myntra',p:42,o:60},{pl:'Ajio',p:43,o:60},{pl:'Tata Cliq',p:42,o:60}],
+      GB:[{pl:'Myntra',p:33,o:48},{pl:'Ajio',p:34,o:48},{pl:'Tata Cliq',p:33,o:48}],
+      EU:[{pl:'Myntra',p:39,o:56},{pl:'Ajio',p:40,o:56},{pl:'Tata Cliq',p:39,o:56}],
+      AE:[{pl:'Myntra',p:154,o:220},{pl:'Ajio',p:156,o:220},{pl:'Tata Cliq',p:154,o:220}],
+      AU:[{pl:'Myntra',p:63,o:90},{pl:'Ajio',p:64,o:90},{pl:'Tata Cliq',p:63,o:90}],
+      CA:[{pl:'Myntra',p:57,o:81},{pl:'Ajio',p:58,o:81},{pl:'Tata Cliq',p:57,o:81}]
+    }
+  },
+  {
+    id:2, name:'Oversized Knit Jumper', brand:'Zara', category:'Apparel', type:'top',
+    image:'https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280',
+    desc:'Heavy-gauge knit with a relaxed shoulder and cozy drape.',
+    sizes:['XS','S','M','L','XL'],
+    prices:{
+      IN:[{pl:'Zara',p:1899,o:2299},{pl:'Myntra',p:2099,o:2299},{pl:'ASOS',p:1950,o:2299}],
+      US:[{pl:'Zara',p:23,o:28},{pl:'Myntra',p:25,o:28},{pl:'ASOS',p:24,o:28}],
+      GB:[{pl:'Zara',p:18,o:22},{pl:'Myntra',p:20,o:22},{pl:'ASOS',p:19,o:22}],
+      EU:[{pl:'Zara',p:21,o:25},{pl:'Myntra',p:23,o:25},{pl:'ASOS',p:22,o:25}],
+      AE:[{pl:'Zara',p:84,o:102},{pl:'Myntra',p:93,o:102},{pl:'ASOS',p:87,o:102}],
+      AU:[{pl:'Zara',p:35,o:42},{pl:'Myntra',p:38,o:42},{pl:'ASOS',p:36,o:42}],
+      CA:[{pl:'Zara',p:31,o:37},{pl:'Myntra',p:34,o:37},{pl:'ASOS',p:32,o:37}]
+    }
+  },
+  {
+    id:3, name:'Speedcat OG Sneakers', brand:'Puma', category:'Footwear', type:'shoe',
+    image:"https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_900,h_900/global/400986/31/mod01/fnd/PNA/fmt/png/Speedcat-OG-Women's-Sneakers",
+    desc:'Breathable mesh and responsive cushioning for daily movement.',
+    sizes:['EU 35','EU 36','EU 37','EU 38','EU 39','EU 40','EU 41'],
+    prices:{
+      IN:[{pl:'Puma',p:4999,o:6599},{pl:'Flipkart',p:5100,o:6599},{pl:'ASOS',p:5200,o:6599}],
+      US:[{pl:'Puma',p:60,o:79},{pl:'Flipkart',p:61,o:79},{pl:'ASOS',p:62,o:79}],
+      GB:[{pl:'Puma',p:47,o:62},{pl:'Flipkart',p:48,o:62},{pl:'ASOS',p:49,o:62}],
+      EU:[{pl:'Puma',p:55,o:72},{pl:'Flipkart',p:56,o:72},{pl:'ASOS',p:57,o:72}],
+      AE:[{pl:'Puma',p:220,o:290},{pl:'Flipkart',p:225,o:290},{pl:'ASOS',p:229,o:290}],
+      AU:[{pl:'Puma',p:90,o:119},{pl:'Flipkart',p:92,o:119},{pl:'ASOS',p:94,o:119}],
+      CA:[{pl:'Puma',p:81,o:107},{pl:'Flipkart',p:83,o:107},{pl:'ASOS',p:84,o:107}]
+    }
+  },
+  {
+    id:4, name:'Deep Navy Linen Shirt', brand:'H&M', category:'Apparel', type:'top',
+    image:'https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536',
+    desc:'Lightweight linen shirt with a crisp silhouette.',
+    sizes:['XS','S','M','L','XL'],
+    prices:{
+      IN:[{pl:'H&M',p:1299,o:1499},{pl:'Myntra',p:1349,o:1499},{pl:'Zalando',p:1280,o:1499}],
+      US:[{pl:'H&M',p:16,o:18},{pl:'Myntra',p:16,o:18},{pl:'Zalando',p:15,o:18}],
+      GB:[{pl:'H&M',p:12,o:14},{pl:'Myntra',p:13,o:14},{pl:'Zalando',p:12,o:14}],
+      EU:[{pl:'H&M',p:14,o:17},{pl:'Myntra',p:15,o:17},{pl:'Zalando',p:14,o:17}],
+      AE:[{pl:'H&M',p:57,o:66},{pl:'Myntra',p:59,o:66},{pl:'Zalando',p:56,o:66}],
+      AU:[{pl:'H&M',p:23,o:27},{pl:'Myntra',p:24,o:27},{pl:'Zalando',p:23,o:27}],
+      CA:[{pl:'H&M',p:21,o:24},{pl:'Myntra',p:22,o:24},{pl:'Zalando',p:20,o:24}]
+    }
+  },
+  {
+    id:5, name:'Classic Straight Jeans', brand:"Levi's", category:'Apparel', type:'bottom',
+    image:'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80',
+    desc:'Straight-leg denim with a timeless fit and clean wash.',
+    sizes:['26','28','30','32','34','36','38'],
+    prices:{
+      IN:[{pl:"Levi's",p:2999,o:3999},{pl:'Myntra',p:3099,o:3999},{pl:'Amazon',p:2850,o:3999}],
+      US:[{pl:"Levi's",p:36,o:48},{pl:'Myntra',p:37,o:48},{pl:'Amazon',p:34,o:48}],
+      GB:[{pl:"Levi's",p:28,o:38},{pl:'Myntra',p:29,o:38},{pl:'Amazon',p:27,o:38}],
+      EU:[{pl:"Levi's",p:33,o:44},{pl:'Myntra',p:34,o:44},{pl:'Amazon',p:31,o:44}],
+      AE:[{pl:"Levi's",p:132,o:176},{pl:'Myntra',p:136,o:176},{pl:'Amazon',p:125,o:176}],
+      AU:[{pl:"Levi's",p:54,o:72},{pl:'Myntra',p:56,o:72},{pl:'Amazon',p:51,o:72}],
+      CA:[{pl:"Levi's",p:48,o:64},{pl:'Myntra',p:50,o:64},{pl:'Amazon',p:46,o:64}]
+    }
+  },
+  {
+    id:6, name:'Satin Camisole Midi Dress', brand:'Mango', category:'Apparel', type:'dress',
+    image:'https://shop.mango.com/assets/rcs/pics/static/T4/fotos/S/47021299_78.jpg?imwidth=2048&imdensity=1&ts=1668519615897',
+    desc:'Midi slip dress with a fluid finish and elegant neckline.',
+    sizes:['XS','S','M','L','XL'],
+    prices:{
+      IN:[{pl:'Mango',p:4500,o:5999},{pl:'Myntra',p:4450,o:5999},{pl:'ASOS',p:4300,o:5999}],
+      US:[{pl:'Mango',p:54,o:72},{pl:'Myntra',p:53,o:72},{pl:'ASOS',p:52,o:72}],
+      GB:[{pl:'Mango',p:42,o:56},{pl:'Myntra',p:42,o:56},{pl:'ASOS',p:40,o:56}],
+      EU:[{pl:'Mango',p:49,o:65},{pl:'Myntra',p:48,o:65},{pl:'ASOS',p:47,o:65}],
+      AE:[{pl:'Mango',p:198,o:264},{pl:'Myntra',p:196,o:264},{pl:'ASOS',p:189,o:264}],
+      AU:[{pl:'Mango',p:81,o:108},{pl:'Myntra',p:80,o:108},{pl:'ASOS',p:77,o:108}],
+      CA:[{pl:'Mango',p:73,o:97},{pl:'Myntra',p:72,o:97},{pl:'ASOS',p:69,o:97}]
+    }
+  },
+  {
+    id:7, name:'Legacy Celestial Watch', brand:'Timex', category:'Accessories', type:'accessory',
+    image:'https://timex.com/cdn/shop/files/TW2Y20200_M.jpg?v=1760446793&width=768',
+    desc:'Midnight dial with a slim profile and polished detail.',
+    sizes:['One Size'],
+    prices:{
+      IN:[{pl:'Flipkart',p:1999,o:2499},{pl:'Ajio',p:2050,o:2499}],
+      US:[{pl:'Flipkart',p:24,o:30},{pl:'Ajio',p:25,o:30}],
+      GB:[{pl:'Flipkart',p:19,o:24},{pl:'Ajio',p:19,o:24}],
+      EU:[{pl:'Flipkart',p:22,o:27},{pl:'Ajio',p:22,o:27}],
+      AE:[{pl:'Flipkart',p:88,o:110},{pl:'Ajio',p:90,o:110}],
+      AU:[{pl:'Flipkart',p:36,o:45},{pl:'Ajio',p:37,o:45}],
+      CA:[{pl:'Flipkart',p:32,o:40},{pl:'Ajio',p:33,o:40}]
+    }
+  },
+  {
+    id:8, name:'Soft Structure Blazer', brand:'Mango', category:'Apparel', type:'top',
+    image:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80',
+    desc:'Relaxed tailored blazer designed for layered dressing.',
+    sizes:['XS','S','M','L','XL'],
+    prices:{
+      IN:[{pl:'Mango',p:5499,o:6999},{pl:'Zara',p:5699,o:6999}],
+      US:[{pl:'Mango',p:66,o:84},{pl:'Zara',p:68,o:84}],
+      GB:[{pl:'Mango',p:52,o:66},{pl:'Zara',p:54,o:66}],
+      EU:[{pl:'Mango',p:60,o:76},{pl:'Zara',p:62,o:76}],
+      AE:[{pl:'Mango',p:242,o:308},{pl:'Zara',p:251,o:308}],
+      AU:[{pl:'Mango',p:99,o:126},{pl:'Zara',p:102,o:126}],
+      CA:[{pl:'Mango',p:89,o:113},{pl:'Zara',p:92,o:113}]
+    }
+  }
+];
+
+const CATS = ['All', ...new Set(PRODUCTS.map(p=>p.category))];
+
+/* ─── App state ─── */
+let S = {
+  view: 'auth',      // auth | onboard | app | product
+  tab:  'discover',  // discover | tracker | wardrobe | profile
+  authMode: 'signin',
+  authError: '',
+  obStep: 1,
+  cat: 'All',
+  query: '',
+  productId: null,
+  showNotify: false,
+  showEditProfile: false
+};
+
+let currentUser  = null;  // email string
+let accounts     = lsGet(K.accounts, {});
+let profile      = dfProfile();
+let tracker      = [];
+let wardrobe     = [];
+let premium      = false;
+
+function dfProfile(){ return {country:'IN',chest:'',waist:'',hip:'',height:'',shoe:'',mobile:''}; }
+
+function loadUser(email){
+  profile = Object.assign(dfProfile(), lsGet(K.pfx_profile+email, {}));
+  tracker = lsGet(K.pfx_tracker+email, []);
+  wardrobe= lsGet(K.pfx_wardrobe+email, []);
+  premium = lsGet(K.pfx_premium+email, false);
+}
+function saveUser(){
+  if(!currentUser) return;
+  lsSet(K.pfx_profile+currentUser, profile);
+  lsSet(K.pfx_tracker+currentUser, tracker);
+  lsSet(K.pfx_wardrobe+currentUser, wardrobe);
+  lsSet(K.pfx_premium+currentUser, premium);
+}
+
+/* ─── Auth helpers ─── */
+function doSignup(name, email, password){
+  if(!email||!password) return 'Please fill in all fields.';
+  const e=email.trim().toLowerCase();
+  if(!/\S+@\S+\.\S+/.test(e)) return 'Enter a valid email address.';
+  if(password.length<6) return 'Password must be at least 6 characters.';
+  if(accounts[e]) return 'An account with this email already exists.';
+  accounts[e] = { name: name.trim()||'User', password };
+  lsSet(K.accounts, accounts);
+  lsSet(K.pfx_profile+e, dfProfile());
+  currentUser = e;
+  lsSet(K.session, {email:e});
+  loadUser(e);
+  return null;
+}
+function doSignin(email, password){
+  if(!email||!password) return 'Please fill in all fields.';
+  const e=email.trim().toLowerCase();
+  const acc=accounts[e];
+  if(!acc||acc.password!==password) return 'Incorrect email or password.';
+  currentUser = e;
+  lsSet(K.session, {email:e});
+  loadUser(e);
+  return null;
+}
+function isOnboarded(){ return currentUser && lsGet(K.pfx_onboarded+currentUser, false); }
+
+/* ─── Size recommendation ─── */
+function recSize(p){
+  if(p.type==='shoe') return profile.shoe||'Add shoe size';
+  if(p.type==='accessory') return 'One Size';
+  const ch=parseFloat(profile.chest), wa=parseFloat(profile.waist), hi=parseFloat(profile.hip);
+  function fromBust(v){ if(!isFinite(v)) return null; if(v<=32) return 'XS'; if(v<=35) return 'S'; if(v<=38) return 'M'; if(v<=41) return 'L'; return 'XL'; }
+  function fromWaist(v){ if(!isFinite(v)) return null; if(v<=26) return 'XS'; if(v<=29) return 'S'; if(v<=32) return 'M'; if(v<=35) return 'L'; return 'XL'; }
+  function fromHip(v){ if(!isFinite(v)) return null; if(v<=36) return 'XS'; if(v<=39) return 'S'; if(v<=42) return 'M'; if(v<=45) return 'L'; return 'XL'; }
+  function larger(a,b){ const o=['XS','S','M','L','XL']; const ra=o.indexOf(a),rb=o.indexOf(b); if(ra<0) return b; if(rb<0) return a; return ra>=rb?a:b; }
+  if(p.type==='bottom'){ const w=fromWaist(wa),h=fromHip(hi); return larger(w,h)||'Add measurements'; }
+  if(p.type==='top'||p.type==='dress'){ return fromBust(ch)||'Add measurements'; }
+  return 'One Size';
+}
+
+/* ─── Prices for current country ─── */
+function pricesFor(p){ return p.prices[profile.country]||p.prices['IN']||[]; }
+function minPrice(p){ const ps=pricesFor(p); return ps.length?Math.min(...ps.map(x=>x.p)):0; }
+function maxDisc(p){ const ps=pricesFor(p); return ps.length?Math.max(...ps.map(x=>Math.round((1-x.p/x.o)*100))):0; }
+function bestPlatform(p){ const ps=pricesFor(p); return ps.length?ps.reduce((a,b)=>a.p<b.p?a:b):{pl:'—',p:0,o:0}; }
+
+/* ─── Helpers ─── */
+function esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function $(sel,ctx=document){ return (ctx).querySelector(sel); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+function getInitials(name){ return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2); }
+
+/* ─── Render engine ─── */
+function render(){ $('#app').innerHTML=''; buildView(); attachListeners(); }
+
+function buildView(){
+  if(!currentUser){ buildAuth(); return; }
+  if(!isOnboarded()){ buildOnboard(); return; }
+  if(S.view==='product'){ buildProduct(); return; }
+  buildApp();
+}
+
+/* ── Auth ── */
+function buildAuth(){
+  const isIn = S.authMode==='signin';
+  $('#app').innerHTML=`
+<div class="auth-page">
+  <div class="auth-logo-area">
+    <img class="auth-logo-img" src="wordmark-dark.png" alt="Nex-In"/>
+    <p class="auth-subtitle">Your smart fashion companion</p>
+  </div>
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab${isIn?' active':''}" id="tab-signin">Sign In</button>
+      <button class="auth-tab${!isIn?' active':''}" id="tab-signup">Sign Up</button>
+    </div>
+    ${S.authError?`<div class="error-box" style="margin-bottom:16px">${esc(S.authError)}</div>`:''}
+    <div class="form-stack">
+      ${!isIn?`<div><label class="field-label">Full name</label><input class="field" id="f-name" type="text" placeholder="Your name" autocomplete="name" enterkeyhint="next"/></div>`:''}
+      <div><label class="field-label">Email</label><input class="field" id="f-email" type="email" placeholder="your@email.com" autocomplete="email" enterkeyhint="next"/></div>
+      <div><label class="field-label">Password</label><input class="field" id="f-pass" type="password" placeholder="••••••••" autocomplete="${isIn?'current-password':'new-password'}" enterkeyhint="done"/></div>
+      <button class="btn btn-dark w-full" id="btn-auth" style="height:52px;font-size:16px;border-radius:16px;margin-top:4px">
+        ${isIn?'Sign In →':'Create Account →'}
+      </button>
+    </div>
+    <p style="text-align:center;margin-top:18px;font-size:13px;color:var(--text2)">
+      ${isIn?`New here? <button class="btn-xs btn-ghost" id="sw-mode" style="margin-left:4px">Create account</button>`:`Already have an account? <button class="btn-xs btn-ghost" id="sw-mode" style="margin-left:4px">Sign in</button>`}
+    </p>
+  </div>
+  <div class="auth-features">
+    <div class="auth-feat"><div class="auth-feat-icon">🔍</div><div class="auth-feat-label">Price Compare</div></div>
+    <div class="auth-feat"><div class="auth-feat-icon">📊</div><div class="auth-feat-label">Track Prices</div></div>
+    <div class="auth-feat"><div class="auth-feat-icon">✨</div><div class="auth-feat-label">AI Fit</div></div>
+  </div>
+</div>`;
+}
+
+/* ── Onboarding ── */
+function buildOnboard(){
+  const step=S.obStep;
+  $('#app').innerHTML=`
+<div class="onboard-overlay">
+  <div style="padding:calc(env(safe-area-inset-top,0px)+20px) 0 0;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between">
+    <span class="t-sm fw-7 c-muted">Step ${step} of 2</span>
+    <span class="brand-logo-wrap"><img class="brand-logo" src="wordmark-dark.png" alt="Nex-In" style="height:18px"/></span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" style="width:${step===1?50:100}%"></div></div>
+  ${step===1?`
+  <h2 class="t-2xl fw-7 serif" style="margin-bottom:6px">Your measurements</h2>
+  <p class="t-sm c-muted" style="margin-bottom:22px;line-height:1.6">We use these to recommend the right size. All values in inches except shoe size.</p>
+  <div class="form-stack">
+    <div class="grid-2">
+      <div><label class="field-label">Chest / Bust</label><input class="field" id="ob-chest" type="number" min="0" step="0.1" placeholder="e.g. 34" value="${esc(profile.chest)}"/></div>
+      <div><label class="field-label">Waist</label><input class="field" id="ob-waist" type="number" min="0" step="0.1" placeholder="e.g. 28" value="${esc(profile.waist)}"/></div>
+      <div><label class="field-label">Hip</label><input class="field" id="ob-hip" type="number" min="0" step="0.1" placeholder="e.g. 38" value="${esc(profile.hip)}"/></div>
+      <div><label class="field-label">Height</label><input class="field" id="ob-height" type="number" min="0" step="0.1" placeholder="e.g. 64" value="${esc(profile.height)}"/></div>
+    </div>
+    <div><label class="field-label">Shoe size</label><input class="field" id="ob-shoe" type="text" placeholder="e.g. EU 38 / UK 6" value="${esc(profile.shoe)}"/></div>
+    <div class="hint-box">Chest, waist, hip and height in inches. Shoe size can be any format.</div>
+    <button class="btn btn-dark w-full" id="ob-next" style="height:52px;font-size:16px;border-radius:16px">Continue →</button>
+    <button class="btn btn-ghost w-full" id="ob-skip" style="height:48px">Skip for now</button>
+  </div>
+  `:`
+  <h2 class="t-2xl fw-7 serif" style="margin-bottom:6px">Your country</h2>
+  <p class="t-sm c-muted" style="margin-bottom:22px;line-height:1.6">We'll show prices in your local currency.</p>
+  <div class="form-stack">
+    <div><label class="field-label">Country</label>
+    <select class="field" id="ob-country">
+      ${COUNTRIES.map(([c,l])=>`<option value="${c}" ${profile.country===c?'selected':''}>${esc(l)}</option>`).join('')}
+    </select></div>
+    <div class="hint-box" id="ob-cur-preview">Prices will show in ${CURRENCY[profile.country||'IN'].sym} ${CURRENCY[profile.country||'IN'].code}.</div>
+    <button class="btn btn-dark w-full" id="ob-finish" style="height:52px;font-size:16px;border-radius:16px">Get started →</button>
+    <button class="btn btn-ghost w-full" id="ob-back">← Back</button>
+  </div>
+  `}
+</div>`;
+}
+
+/* ── App shell ── */
+function buildApp(){
+  const tabMap={
+    discover: buildDiscover,
+    tracker:  buildTracker,
+    wardrobe: buildWardrobe,
+    profile:  buildProfile
+  };
+  const notifyItems=[
+    {title:'Price drop alert',body:'Minimalist Leather Tote is now at its best price.'},
+    {title:'Tracker update',body:'Your saved blazer has a new lower price on one platform.'},
+    {title:'Wardrobe tip',body:'New outfit ideas based on your purchased items.'}
+  ];
+  $('#app').innerHTML=`
+<header class="header">
+  <div class="flex items-center justify-between w-full">
+    <span class="brand-logo-wrap"><img class="brand-logo" src="wordmark-dark.png" alt="Nex-In"/></span>
+    <div class="flex items-center gap-2" style="position:relative">
+      <button class="btn-icon" id="notify-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 17H5l1.4-1.4A2 2 0 0 0 7 14.1V11a5 5 0 0 1 10 0v3.1a2 2 0 0 0 .6 1.4L19 17h-4"/>
+          <path d="M10.5 19a2 2 0 0 0 3 0"/>
+        </svg>
+      </button>
+      ${S.showNotify?`
+      <div class="notify-panel">
+        <div style="padding:10px 14px 8px;border-bottom:1px solid var(--border)">
+          <div class="t-base fw-7">Notifications</div>
+        </div>
+        ${notifyItems.map(n=>`<div class="notify-item"><div class="notify-title">${esc(n.title)}</div><div class="notify-body">${esc(n.body)}</div></div>`).join('')}
+        <div style="padding:8px"><button class="btn btn-ghost btn-sm w-full" id="notify-close">Close</button></div>
+      </div>`:''}
+    </div>
+  </div>
+</header>
+<main id="main-content"></main>
+<nav class="tabbar">
+  ${[
+    ['discover','Discover',`<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>`],
+    ['tracker','Tracker',`<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`],
+    ['wardrobe','Wardrobe',`<path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>`],
+    ['profile','Profile',`<circle cx="12" cy="7" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>`]
+  ].map(([id,label,icon])=>`
+    <button class="tab-item${S.tab===id?' active':''}" data-tab="${id}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${S.tab===id?2:1.6}" stroke-linecap="round" stroke-linejoin="round">${icon}</svg>
+      ${label}
+      ${S.tab===id?'<div class="tab-dot"></div>':''}
+    </button>`).join('')}
+</nav>`;
+  (tabMap[S.tab]||buildDiscover)();
+}
+
+/* ── Discover ── */
+function buildDiscover(){
+  const list=PRODUCTS.filter(p=>{
+    const inCat=S.cat==='All'||p.category===S.cat;
+    const q=S.query.trim().toLowerCase();
+    return inCat&&(!q||[p.name,p.brand,p.category,p.desc].join(' ').toLowerCase().includes(q));
+  });
+  $('#main-content').innerHTML=`
+<div class="page-gap">
+  <div class="hero-banner">
+    <div class="badge badge-gold" style="margin-bottom:12px">✦ Smart price intelligence</div>
+    <div class="serif t-2xl" style="color:#fff;margin-bottom:6px">Fashion at the<br><em>right price, right size.</em></div>
+    <p style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.6">Compare across platforms. Get your size recommendation instantly.</p>
+  </div>
+
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-field" id="search-input" type="search" placeholder="Search brands, products…" value="${esc(S.query)}" enterkeyhint="search"/>
+  </div>
+
+  <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+    ${CATS.map(c=>`<button class="chip${S.cat===c?' on':''}" style="flex-shrink:0" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
+  </div>
+
+  <div class="section-head">
+    <span class="section-title">${S.cat==='All'?'All Products':S.cat}</span>
+    <span class="t-sm c-faint">${list.length} items</span>
+  </div>
+
+  <div class="prod-grid">
+    ${list.map(p=>{
+      const mp=minPrice(p), disc=maxDisc(p);
+      return `<div class="prod-card" data-pid="${p.id}">
+        <img class="prod-card-img" src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy"/>
+        <div class="prod-card-body">
+          <div class="prod-card-brand">${esc(p.brand)}</div>
+          <div class="prod-card-name">${esc(p.name)}</div>
+          <div class="flex items-center justify-between">
+            <span class="prod-card-price">${fmtMoney(mp,profile.country)}</span>
+            ${disc?`<span class="prod-card-off">−${disc}%</span>`:''}
+          </div>
+          <div style="margin-top:6px"><span class="badge" style="font-size:10px">${esc(recSize(p))}</span></div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+  ${!list.length?`<div class="empty-state surface"><div class="empty-icon">🔍</div><div class="empty-title">No products found</div><div class="empty-sub">Try a different search or category.</div></div>`:''}
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+    <span class="t-sm c-faint">Showing prices in ${CURRENCY[profile.country]?.code||'INR'}</span>
+    <button class="btn-xs btn-ghost" id="btn-premium">${premium?'✦ Premium active':'Upgrade to Premium'}</button>
+  </div>
+</div>`;
+}
+
+/* ── Product detail ── */
+function buildProduct(){
+  const p=PRODUCTS.find(x=>x.id===S.productId);
+  if(!p){ S.view='app'; render(); return; }
+  const ps=pricesFor(p);
+  const bp=bestPlatform(p);
+  const mp=minPrice(p);
+  const rs=recSize(p);
+  const inTracker=tracker.includes(p.id);
+  const inWardrobe=wardrobe.includes(p.id);
+
+  $('#app').innerHTML=`
+<header class="header">
+  <div class="flex items-center gap-3 w-full">
+    <button class="btn-icon" id="btn-back" aria-label="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <span class="t-base fw-7" style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(p.name)}</span>
+    <span class="badge badge-gold">${CURRENCY[profile.country]?.code||'INR'}</span>
+  </div>
+</header>
+<main style="padding-top:calc(var(--header-h)+16px);padding-left:16px;padding-right:16px">
+<div class="page-gap">
+  <img src="${esc(p.image)}" alt="${esc(p.name)}" style="width:100%;border-radius:var(--r-xl);aspect-ratio:4/3;object-fit:cover;background:#F0EBE5"/>
+
+  <div>
+    <div class="flex items-center gap-2" style="margin-bottom:6px">
+      <span class="badge">${esc(p.brand)}</span>
+      <span class="badge">${esc(p.category)}</span>
+    </div>
+    <h1 class="t-xl fw-7" style="margin-bottom:8px">${esc(p.name)}</h1>
+    <p class="t-sm c-muted" style="line-height:1.6">${esc(p.desc)}</p>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi-box">
+      <div class="kpi-num">${fmtMoney(mp,profile.country)}</div>
+      <div class="kpi-lab">Best price</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-num">${esc(bp.pl)}</div>
+      <div class="kpi-lab">Lowest platform</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-num">${maxDisc(p)}%</div>
+      <div class="kpi-lab">Max discount</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-num" style="color:var(--gold)">${esc(rs)}</div>
+      <div class="kpi-lab">Your size</div>
+    </div>
+  </div>
+
+  <div class="surface" style="padding:16px">
+    <div class="t-base fw-7" style="margin-bottom:10px">Recommended size</div>
+    <div style="background:rgba(201,169,110,.1);border:1px solid rgba(201,169,110,.3);border-radius:var(--r-md);padding:12px 14px;font-size:13px;color:#7A5B20;margin-bottom:12px">
+      Based on your measurements, we suggest <strong>${esc(rs)}</strong>.
+    </div>
+    <div class="size-grid">
+      ${p.sizes.map(s=>`<span class="size-pill${s.replace(/\s/g,'')===rs.replace(/\s/g,'')||s===rs?' rec':''}">${esc(s)}</span>`).join('')}
+    </div>
+  </div>
+
+  <div class="surface" style="padding:16px">
+    <div class="t-base fw-7" style="margin-bottom:12px">Price comparison</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${ps.map((pr,i)=>`
+      <div class="price-row${i===0?' price-row-best':''}">
+        <div>
+          <div class="t-sm fw-7">${esc(pr.pl)}</div>
+          <div class="t-xs c-muted" style="margin-top:1px">Was ${fmtMoney(pr.o,profile.country)}</div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="t-base fw-8">${fmtMoney(pr.p,profile.country)}</span>
+          <a href="#" class="btn btn-xs btn-ghost">Buy</a>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="premium-card">
+    <div class="flex items-center justify-between" style="margin-bottom:14px">
+      <div>
+        <div class="badge badge-gold" style="margin-bottom:8px">✦ Premium</div>
+        <div class="t-base fw-7" style="color:#fff">Unlock deeper insights</div>
+      </div>
+      <button class="btn btn-gold btn-sm" id="btn-premium-toggle">${premium?'Active':'Upgrade'}</button>
+    </div>
+    <div class="grid-2">
+      <div class="premium-feature"><div class="premium-feature-title">AI Fit Score</div><div class="premium-feature-desc">Precise size across brands</div></div>
+      <div class="premium-feature"><div class="premium-feature-title">Price History</div><div class="premium-feature-desc">Know the best time to buy</div></div>
+      <div class="premium-feature"><div class="premium-feature-title">Drop Alerts</div><div class="premium-feature-desc">Instant price-drop push</div></div>
+      <div class="premium-feature"><div class="premium-feature-title">Style Match</div><div class="premium-feature-desc">Outfit ideas from wardrobe</div></div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:24px">
+    <button class="btn btn-dark w-full" id="btn-track" style="height:52px;font-size:15px;border-radius:16px">
+      ${inTracker?'✓ In Tracker':'Save to Tracker'}
+    </button>
+    <button class="btn btn-ghost w-full" id="btn-purchase" style="height:48px;border-radius:16px">
+      ${inWardrobe?'✓ In Wardrobe':'Mark as Purchased'}
+    </button>
+  </div>
+</div>
+</main>`;
+}
+
+/* ── Tracker ── */
+function buildTracker(){
+  $('#main-content').innerHTML=`
+<div class="page-gap">
+  <div>
+    <div class="t-2xl fw-7 serif" style="margin-bottom:4px">Tracker</div>
+    <p class="t-sm c-muted">Items you're watching for a better price.</p>
+  </div>
+  ${tracker.length?tracker.map(id=>{
+    const p=PRODUCTS.find(x=>x.id===id); if(!p) return '';
+    return `<div class="item-row" data-pid="${p.id}" style="cursor:pointer">
+      <img class="item-thumb" src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy"/>
+      <div class="item-info">
+        <div class="item-brand">${esc(p.brand)}</div>
+        <div class="item-name">${esc(p.name)}</div>
+        <div class="item-price">${fmtMoney(minPrice(p),profile.country)}</div>
+      </div>
+      <button class="btn-icon" onclick="event.stopPropagation();N.removeTracker(${p.id})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
+    </div>`;
+  }).join(''):`<div class="empty-state surface"><div class="empty-icon">📌</div><div class="empty-title">Nothing saved yet</div><div class="empty-sub">Tap "Save to Tracker" on any product page to watch its price.</div></div>`}
+</div>`;
+}
+
+/* ── Wardrobe ── */
+function buildWardrobe(){
+  $('#main-content').innerHTML=`
+<div class="page-gap">
+  <div>
+    <div class="t-2xl fw-7 serif" style="margin-bottom:4px">Wardrobe</div>
+    <p class="t-sm c-muted">Everything you've purchased.</p>
+  </div>
+  ${wardrobe.length?wardrobe.map(id=>{
+    const p=PRODUCTS.find(x=>x.id===id); if(!p) return '';
+    return `<div class="item-row" data-pid="${p.id}" style="cursor:pointer">
+      <img class="item-thumb" src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy"/>
+      <div class="item-info">
+        <div class="item-brand">${esc(p.brand)}</div>
+        <div class="item-name">${esc(p.name)}</div>
+        <div class="item-price">${fmtMoney(minPrice(p),profile.country)} · ${esc(recSize(p))}</div>
+      </div>
+      <button class="btn-icon" onclick="event.stopPropagation();N.removeWardrobe(${p.id})">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
+    </div>`;
+  }).join(''):`<div class="empty-state surface"><div class="empty-icon">👗</div><div class="empty-title">Your wardrobe is empty</div><div class="empty-sub">Mark any item as purchased and it'll appear here.</div></div>`}
+</div>`;
+}
+
+/* ── Profile ── */
+function buildProfile(){
+  const acc=accounts[currentUser]||{};
+  const name=acc.name||'User';
+  const initials=getInitials(name);
+  const cur=CURRENCY[profile.country]||CURRENCY.IN;
+  $('#main-content').innerHTML=`
+<div class="page-gap">
+  <!-- Identity card -->
+  <div class="profile-info-card">
+    <div style="padding:18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border)">
+      <div class="profile-avatar">${esc(initials)}</div>
+      <div>
+        <div class="t-lg fw-7">${esc(name)}</div>
+        <div class="t-xs c-muted" style="margin-top:2px">${esc(currentUser)}</div>
+      </div>
+    </div>
+    <div style="padding:4px 0 0">
+      <div style="padding:6px 18px 4px"><span class="t-xs fw-7 c-muted" style="letter-spacing:.06em;text-transform:uppercase">Profile Info</span></div>
+      <div class="profile-row"><span class="profile-row-label">Name</span><span class="profile-row-value">${esc(name)}</span></div>
+      <div class="profile-row"><span class="profile-row-label">Email</span><span class="profile-row-value">${esc(currentUser)}</span></div>
+      <div class="profile-row"><span class="profile-row-label">Mobile</span><span class="profile-row-value">${esc(profile.mobile||'—')}</span></div>
+    </div>
+    <div class="edit-link" id="btn-edit-profile">Edit profile &rsaquo;</div>
+  </div>
+
+  ${S.showEditProfile?`
+  <div class="surface" style="padding:18px">
+    <div class="t-base fw-7" style="margin-bottom:14px">Edit Profile</div>
+    <div class="form-stack">
+      <div><label class="field-label">Display name</label><input class="field" id="pf-name" type="text" value="${esc(name)}" autocomplete="name"/></div>
+      <div><label class="field-label">Mobile</label><input class="field" id="pf-mobile" type="tel" value="${esc(profile.mobile||'')}" placeholder="+91 98765 43210" autocomplete="tel"/></div>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-dark" id="btn-save-info" style="flex:1;height:48px">Save</button>
+        <button class="btn btn-ghost" id="btn-cancel-edit" style="height:48px">Cancel</button>
+      </div>
+    </div>
+  </div>`:''}
+
+  <!-- Country & Currency -->
+  <div class="surface" style="padding:18px">
+    <div class="flex items-center justify-between" style="margin-bottom:12px">
+      <div class="t-base fw-7">Country &amp; Currency</div>
+      <span class="badge badge-gold">${esc(cur.sym)} ${esc(cur.code)}</span>
+    </div>
+    <label class="field-label">Country</label>
+    <select class="field" id="pf-country">
+      ${COUNTRIES.map(([c,l])=>`<option value="${c}" ${profile.country===c?'selected':''}>${esc(l)}</option>`).join('')}
+    </select>
+  </div>
+
+  <!-- Measurements -->
+  <div class="surface" style="padding:18px">
+    <div class="t-base fw-7" style="margin-bottom:4px">My Measurements</div>
+    <p class="t-sm c-muted" style="margin-bottom:14px">Inches (except shoe size)</p>
+    <div class="form-stack">
+      <div class="grid-2">
+        <div><label class="field-label">Chest / Bust</label><input class="field" id="pf-chest" type="number" min="0" step="0.1" value="${esc(profile.chest)}" placeholder="e.g. 34"/></div>
+        <div><label class="field-label">Waist</label><input class="field" id="pf-waist" type="number" min="0" step="0.1" value="${esc(profile.waist)}" placeholder="e.g. 28"/></div>
+        <div><label class="field-label">Hip</label><input class="field" id="pf-hip" type="number" min="0" step="0.1" value="${esc(profile.hip)}" placeholder="e.g. 38"/></div>
+        <div><label class="field-label">Height</label><input class="field" id="pf-height" type="number" min="0" step="0.1" value="${esc(profile.height)}" placeholder="e.g. 64"/></div>
+      </div>
+      <div><label class="field-label">Shoe size</label><input class="field" id="pf-shoe" type="text" value="${esc(profile.shoe)}" placeholder="e.g. EU 38 / UK 6"/></div>
+    </div>
+  </div>
+
+  <!-- Save -->
+  <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:24px">
+    <button class="btn btn-dark w-full" id="btn-save-profile" style="height:52px;font-size:15px;border-radius:16px">Save Changes</button>
+    <button class="btn btn-danger w-full" id="btn-signout" style="height:48px;border-radius:16px">Sign Out</button>
+  </div>
+</div>`;
+}
+
+/* ─── Event listener hub ─── */
+function attachListeners(){
+  /* Auth */
+  const btnAuth=$('#btn-auth');
+  if(btnAuth) btnAuth.addEventListener('click',()=>{
+    const email=($('#f-email')||{}).value||'';
+    const pass=($('#f-pass')||{}).value||'';
+    const name=($('#f-name')||{}).value||'';
+    S.authError='';
+    const err=S.authMode==='signin'?doSignin(email,pass):doSignup(name,email,pass);
+    if(err){ S.authError=err; render(); return; }
+    S.view=isOnboarded()?'app':'onboard';
+    S.tab='discover';
+    render();
+  });
+  const tabSI=$('#tab-signin');
+  if(tabSI) tabSI.addEventListener('click',()=>{ S.authMode='signin'; S.authError=''; render(); });
+  const tabSU=$('#tab-signup');
+  if(tabSU) tabSU.addEventListener('click',()=>{ S.authMode='signup'; S.authError=''; render(); });
+  const swMode=$('#sw-mode');
+  if(swMode) swMode.addEventListener('click',()=>{ S.authMode=S.authMode==='signin'?'signup':'signin'; S.authError=''; render(); });
+  /* allow Enter key on auth fields */
+  ['#f-email','#f-pass','#f-name'].forEach(sel=>{
+    const el=$(sel);
+    if(el) el.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); btnAuth&&btnAuth.click(); } });
+  });
+
+  /* Onboarding */
+  const obNext=$('#ob-next');
+  if(obNext) obNext.addEventListener('click',()=>{
+    profile.chest=$('#ob-chest')?.value||'';
+    profile.waist=$('#ob-waist')?.value||'';
+    profile.hip=$('#ob-hip')?.value||'';
+    profile.height=$('#ob-height')?.value||'';
+    profile.shoe=$('#ob-shoe')?.value||'';
+    saveUser();
+    S.obStep=2; render();
+  });
+  const obSkip=$('#ob-skip');
+  if(obSkip) obSkip.addEventListener('click',()=>{ lsSet(K.pfx_onboarded+currentUser,true); S.view='app'; render(); });
+  const obBack=$('#ob-back');
+  if(obBack) obBack.addEventListener('click',()=>{ S.obStep=1; render(); });
+  const obFinish=$('#ob-finish');
+  if(obFinish) obFinish.addEventListener('click',()=>{
+    profile.country=$('#ob-country')?.value||'IN';
+    saveUser(); lsSet(K.pfx_onboarded+currentUser,true);
+    S.view='app'; S.tab='discover'; render();
+  });
+  const obCur=$('#ob-country');
+  if(obCur) obCur.addEventListener('change',()=>{
+    const pr=$('#ob-cur-preview');
+    const c=CURRENCY[obCur.value]||CURRENCY.IN;
+    if(pr) pr.textContent=`Prices will show in ${c.sym} ${c.code}.`;
+  });
+
+  /* Nav tabs */
+  document.querySelectorAll('[data-tab]').forEach(btn=>{
+    btn.addEventListener('click',()=>{ S.tab=btn.dataset.tab; S.view='app'; S.showNotify=false; render(); });
+  });
+
+  /* Notifications */
+  const notBtn=$('#notify-btn');
+  if(notBtn) notBtn.addEventListener('click',e=>{ e.stopPropagation(); S.showNotify=!S.showNotify; render(); });
+  const notClose=$('#notify-close');
+  if(notClose) notClose.addEventListener('click',()=>{ S.showNotify=false; render(); });
+
+  /* Search */
+  const si=$('#search-input');
+  if(si) si.addEventListener('input',()=>{ S.query=si.value; buildDiscover(); attachSearchListeners(); });
+
+  /* Category chips */
+  document.querySelectorAll('[data-cat]').forEach(btn=>{
+    btn.addEventListener('click',()=>{ S.cat=btn.dataset.cat; buildDiscover(); attachSearchListeners(); });
+  });
+
+  /* Product cards (discover) */
+  document.querySelectorAll('.prod-card[data-pid]').forEach(card=>{
+    card.addEventListener('click',()=>{ S.productId=parseInt(card.dataset.pid); S.view='product'; render(); });
+  });
+
+  /* Product cards (tracker/wardrobe lists) */
+  document.querySelectorAll('.item-row[data-pid]').forEach(row=>{
+    row.addEventListener('click',()=>{ S.productId=parseInt(row.dataset.pid); S.view='product'; render(); });
+  });
+
+  /* Back button on product */
+  const btnBack=$('#btn-back');
+  if(btnBack) btnBack.addEventListener('click',()=>{ S.view='app'; S.productId=null; render(); });
+
+  /* Track / purchase on product detail */
+  const btnTrack=$('#btn-track');
+  if(btnTrack) btnTrack.addEventListener('click',()=>{
+    if(!tracker.includes(S.productId)){ tracker.unshift(S.productId); saveUser(); toast('Added to Tracker'); }
+    else toast('Already in Tracker');
+    render();
+  });
+  const btnPurchase=$('#btn-purchase');
+  if(btnPurchase) btnPurchase.addEventListener('click',()=>{
+    if(!wardrobe.includes(S.productId)){ wardrobe.unshift(S.productId); saveUser(); toast('Added to Wardrobe ✓'); }
+    else toast('Already in Wardrobe');
+    render();
+  });
+  const btnPremiumToggle=$('#btn-premium-toggle');
+  if(btnPremiumToggle) btnPremiumToggle.addEventListener('click',()=>{ premium=!premium; saveUser(); render(); });
+
+  /* Discover premium btn */
+  const btnPremium=$('#btn-premium');
+  if(btnPremium) btnPremium.addEventListener('click',()=>{ premium=!premium; saveUser(); render(); });
+
+  /* Profile */
+  const btnEditProfile=$('#btn-edit-profile');
+  if(btnEditProfile) btnEditProfile.addEventListener('click',()=>{ S.showEditProfile=!S.showEditProfile; render(); });
+  const btnSaveInfo=$('#btn-save-info');
+  if(btnSaveInfo) btnSaveInfo.addEventListener('click',()=>{
+    const n=$('#pf-name')?.value.trim();
+    if(n){ accounts[currentUser].name=n; lsSet(K.accounts,accounts); }
+    profile.mobile=$('#pf-mobile')?.value.trim()||'';
+    saveUser(); S.showEditProfile=false; toast('Profile updated'); render();
+  });
+  const btnCancelEdit=$('#btn-cancel-edit');
+  if(btnCancelEdit) btnCancelEdit.addEventListener('click',()=>{ S.showEditProfile=false; render(); });
+  const btnSaveProfile=$('#btn-save-profile');
+  if(btnSaveProfile) btnSaveProfile.addEventListener('click',()=>{
+    profile.country=$('#pf-country')?.value||profile.country;
+    profile.chest=$('#pf-chest')?.value||'';
+    profile.waist=$('#pf-waist')?.value||'';
+    profile.hip=$('#pf-hip')?.value||'';
+    profile.height=$('#pf-height')?.value||'';
+    profile.shoe=$('#pf-shoe')?.value||'';
+    saveUser(); toast('Changes saved ✓'); render();
+  });
+  const btnSignout=$('#btn-signout');
+  if(btnSignout) btnSignout.addEventListener('click',()=>{
+    currentUser=null; lsDel(K.session); profile=dfProfile(); tracker=[]; wardrobe=[]; premium=false;
+    S=Object.assign({view:'auth',tab:'discover',authMode:'signin',authError:'',obStep:1,cat:'All',query:'',productId:null,showNotify:false,showEditProfile:false});
+    render();
+  });
+
+  /* Dismiss notify on outside click */
+  if(S.showNotify){
+    setTimeout(()=>{
+      document.addEventListener('click',function handler(e){
+        if(!e.target.closest('#notify-btn')&&!e.target.closest('.notify-panel')){
+          S.showNotify=false; render();
+          document.removeEventListener('click',handler);
+        }
+      });
+    },0);
+  }
+}
+
+/* separate so re-building discover doesn't re-attach global listeners */
+function attachSearchListeners(){
+  document.querySelectorAll('.prod-card[data-pid]').forEach(card=>{
+    card.addEventListener('click',()=>{ S.productId=parseInt(card.dataset.pid); S.view='product'; render(); });
+  });
+  document.querySelectorAll('[data-cat]').forEach(btn=>{
+    btn.addEventListener('click',()=>{ S.cat=btn.dataset.cat; buildDiscover(); attachSearchListeners(); });
+  });
+}
+
+/* ─── Public API for inline handlers (delete buttons) ─── */
+window.N = {
+  removeTracker(id){ tracker=tracker.filter(x=>x!==id); saveUser(); buildTracker(); },
+  removeWardrobe(id){ wardrobe=wardrobe.filter(x=>x!==id); saveUser(); buildWardrobe(); }
+};
+
+/* ─── Boot ─── */
+const sess=lsGet(K.session,null);
+if(sess&&sess.email&&lsGet(K.accounts,{})[sess.email]){
+  currentUser=sess.email;
+  accounts=lsGet(K.accounts,{});
+  loadUser(currentUser);
+  S.view=isOnboarded()?'app':'onboard';
+  S.tab='discover';
+}
+render();
+
+})();
+
+/* ─── PWA: service worker + install prompt (outside main IIFE, no shared state needed) ─── */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+
+(function(){
+  let deferredPrompt=null;
+  const banner=document.getElementById('install-banner');
+  const installBtn=document.getElementById('ib-install-btn');
+  const closeBtn=document.getElementById('ib-close-btn');
+  const DISMISS_KEY='ni_install_dismissed';
+
+  function isStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+  }
+
+  window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt=e;
+    if(isStandalone()) return;
+    if(localStorage.getItem(DISMISS_KEY)==='1') return;
+    setTimeout(()=>{ banner.classList.add('show'); },1200);
+  });
+
+  if(installBtn) installBtn.addEventListener('click', async ()=>{
+    if(!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt=null;
+    banner.classList.remove('show');
+  });
+
+  if(closeBtn) closeBtn.addEventListener('click',()=>{
+    banner.classList.remove('show');
+    localStorage.setItem(DISMISS_KEY,'1');
+  });
+
+  // iOS Safari has no beforeinstallprompt — show manual instructions instead
+  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if(isIOS && !isStandalone() && localStorage.getItem(DISMISS_KEY)!=='1'){
+    setTimeout(()=>{
+      document.querySelector('#install-banner .ib-sub').textContent='Tap the Share icon, then "Add to Home Screen"';
+      installBtn.textContent='Got it';
+      installBtn.addEventListener('click',()=>{
+        banner.classList.remove('show');
+        localStorage.setItem(DISMISS_KEY,'1');
+      });
+      banner.classList.add('show');
+    },1200);
+  }
+})();
+</script>
+</body>
+</html>

@@ -177,7 +177,7 @@ img { display: block; max-width: 100%; }
   padding: 0 20px;
 }
 .brand-logo {
-  height: 22px; width: auto; display: block;
+  height: 28px; width: auto; display: block;
   filter: drop-shadow(0 1px 2px rgba(45,41,38,0.12));
 }
 .brand-logo-wrap {
@@ -200,7 +200,7 @@ img { display: block; max-width: 100%; }
   background: rgba(247,244,240,0.96);
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid var(--border);
-  display: grid; grid-template-columns: repeat(4,1fr);
+  display: grid; grid-template-columns: repeat(5,1fr);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 .tab-item {
@@ -755,7 +755,8 @@ function buildApp(){
     discover: buildDiscover,
     tracker:  buildTracker,
     wardrobe: buildWardrobe,
-    profile:  buildProfile
+    profile:  buildProfile,
+    search:   buildSearch
   };
   const notifyItems=[
     {title:'Price drop alert',body:'Minimalist Leather Tote is now at its best price.'},
@@ -764,9 +765,10 @@ function buildApp(){
   ];
   $('#app').innerHTML=`
 <header class="header">
-  <div class="flex items-center justify-between w-full">
+  <div style="display:grid;grid-template-columns:1fr auto 1fr;align-items:center;width:100%">
+    <div></div>
     <span class="brand-logo-wrap"><img class="brand-logo" src="wordmark-dark.png" alt="Nex-In"/></span>
-    <div class="flex items-center gap-2" style="position:relative">
+    <div class="flex items-center gap-2" style="position:relative;justify-content:flex-end">
       <button class="btn-icon" id="notify-btn" aria-label="Notifications">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M15 17H5l1.4-1.4A2 2 0 0 0 7 14.1V11a5 5 0 0 1 10 0v3.1a2 2 0 0 0 .6 1.4L19 17h-4"/>
@@ -787,8 +789,9 @@ function buildApp(){
 <main id="main-content"></main>
 <nav class="tabbar">
   ${[
-    ['discover','Discover',`<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>`],
+    ['discover','Home',`<path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>`],
     ['tracker','Tracker',`<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>`],
+    ['search','Search',`<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>`],
     ['wardrobe','Wardrobe',`<path d="M20 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>`],
     ['profile','Profile',`<circle cx="12" cy="7" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>`]
   ].map(([id,label,icon])=>`
@@ -962,6 +965,60 @@ function buildProduct(){
   </div>
 </div>
 </main>`;
+}
+
+/* ── Search ── */
+function buildSearch(){
+  const list=PRODUCTS.filter(p=>{
+    const q=S.query.trim().toLowerCase();
+    return !q||[p.name,p.brand,p.category,p.desc].join(' ').toLowerCase().includes(q);
+  });
+  $('#main-content').innerHTML=`
+<div class="page-gap">
+  <div>
+    <div class="t-2xl fw-7 serif" style="margin-bottom:4px">Search</div>
+    <p class="t-sm c-muted">Find products, brands, and categories.</p>
+  </div>
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="search-field" id="search-input" type="search" placeholder="Search brands, products, categories…" value="${esc(S.query)}" enterkeyhint="search" autofocus/>
+  </div>
+  ${S.query?`
+  <div class="section-head">
+    <span class="section-title">Results</span>
+    <span class="t-sm c-faint">${list.length} found</span>
+  </div>
+  <div class="prod-grid">
+    ${list.map(p=>{
+      const mp=minPrice(p), disc=maxDisc(p);
+      return `<div class="prod-card" data-pid="${p.id}">
+        <img class="prod-card-img" src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy"/>
+        <div class="prod-card-body">
+          <div class="prod-card-brand">${esc(p.brand)}</div>
+          <div class="prod-card-name">${esc(p.name)}</div>
+          <div class="flex items-center justify-between">
+            <span class="prod-card-price">${fmtMoney(mp,profile.country)}</span>
+            ${disc?`<span class="prod-card-off">−${disc}%</span>`:''}
+          </div>
+          <div style="margin-top:6px"><span class="badge" style="font-size:10px">${esc(recSize(p))}</span></div>
+        </div>
+      </div>`;
+    }).join('')}
+  </div>
+  ${!list.length?`<div class="empty-state surface"><div class="empty-icon">🔍</div><div class="empty-title">No results</div><div class="empty-sub">Try a different search term or browse by category on the Home tab.</div></div>`:''}
+  `:`
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    ${['All',...new Set(PRODUCTS.map(p=>p.category))].map(c=>`<button class="chip" style="flex-shrink:0" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
+  </div>
+  <div class="empty-state" style="padding-top:32px">
+    <div class="empty-icon">🔎</div>
+    <div class="empty-title">Search for anything</div>
+    <div class="empty-sub">Type a product name, brand, or category above.</div>
+  </div>
+  `}
+</div>`;
+  // auto-focus search field
+  setTimeout(()=>{ const el=$('#search-input'); if(el){ el.focus(); el.setSelectionRange(el.value.length,el.value.length); } },80);
 }
 
 /* ── Tracker ── */
@@ -1145,7 +1202,13 @@ function attachListeners(){
 
   /* Nav tabs */
   document.querySelectorAll('[data-tab]').forEach(btn=>{
-    btn.addEventListener('click',()=>{ S.tab=btn.dataset.tab; S.view='app'; S.showNotify=false; render(); });
+    btn.addEventListener('click',()=>{
+      const t=btn.dataset.tab;
+      S.tab=t; S.view='app'; S.showNotify=false;
+      // switching away from search clears the query so it doesn't bleed into Discover
+      if(t!=='search' && t!=='discover') S.query='';
+      render();
+    });
   });
 
   /* Notifications */
@@ -1156,11 +1219,18 @@ function attachListeners(){
 
   /* Search */
   const si=$('#search-input');
-  if(si) si.addEventListener('input',()=>{ S.query=si.value; buildDiscover(); attachSearchListeners(); });
+  if(si) si.addEventListener('input',()=>{
+    S.query=si.value;
+    if(S.tab==='search'){ buildSearch(); attachSearchListeners(); }
+    else { buildDiscover(); attachSearchListeners(); }
+  });
 
   /* Category chips */
   document.querySelectorAll('[data-cat]').forEach(btn=>{
-    btn.addEventListener('click',()=>{ S.cat=btn.dataset.cat; buildDiscover(); attachSearchListeners(); });
+    btn.addEventListener('click',()=>{
+      S.cat=btn.dataset.cat; S.tab='discover';
+      buildDiscover(); attachSearchListeners();
+    });
   });
 
   /* Product cards (discover) */
@@ -1239,13 +1309,13 @@ function attachListeners(){
   }
 }
 
-/* separate so re-building discover doesn't re-attach global listeners */
+/* separate so re-building discover/search doesn't re-attach global listeners */
 function attachSearchListeners(){
   document.querySelectorAll('.prod-card[data-pid]').forEach(card=>{
     card.addEventListener('click',()=>{ S.productId=parseInt(card.dataset.pid); S.view='product'; render(); });
   });
   document.querySelectorAll('[data-cat]').forEach(btn=>{
-    btn.addEventListener('click',()=>{ S.cat=btn.dataset.cat; buildDiscover(); attachSearchListeners(); });
+    btn.addEventListener('click',()=>{ S.cat=btn.dataset.cat; S.tab='discover'; buildDiscover(); attachSearchListeners(); });
   });
 }
 
@@ -1268,57 +1338,59 @@ render();
 
 })();
 
-/* ─── PWA: service worker + install prompt (outside main IIFE, no shared state needed) ─── */
+/* ─── PWA: service worker ─── */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js').catch(()=>{});
   });
 }
 
+/* ─── Install banner ─── */
 (function(){
-  let deferredPrompt=null;
-  const banner=document.getElementById('install-banner');
-  const installBtn=document.getElementById('ib-install-btn');
-  const closeBtn=document.getElementById('ib-close-btn');
-  const DISMISS_KEY='ni_install_dismissed';
+  const DISMISS_KEY = 'ni_install_dismissed';
+  const banner      = document.getElementById('install-banner');
+  const installBtn  = document.getElementById('ib-install-btn');
+  const closeBtn    = document.getElementById('ib-close-btn');
+  let deferredPrompt = null;
 
-  function isStandalone(){
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-  }
+  function isDismissed(){ return localStorage.getItem(DISMISS_KEY)==='1'; }
+  function isStandalone(){ return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true; }
 
-  window.addEventListener('beforeinstallprompt',(e)=>{
-    e.preventDefault();
-    deferredPrompt=e;
-    if(isStandalone()) return;
-    if(localStorage.getItem(DISMISS_KEY)==='1') return;
-    setTimeout(()=>{ banner.classList.add('show'); },1200);
-  });
-
-  if(installBtn) installBtn.addEventListener('click', async ()=>{
-    if(!deferredPrompt) return;
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt=null;
-    banner.classList.remove('show');
-  });
-
-  if(closeBtn) closeBtn.addEventListener('click',()=>{
+  function dismiss(){
     banner.classList.remove('show');
     localStorage.setItem(DISMISS_KEY,'1');
+  }
+
+  function showBanner(){
+    if(isDismissed() || isStandalone()) return;
+    banner.classList.add('show');
+  }
+
+  /* Both buttons always dismiss permanently */
+  if(closeBtn)   closeBtn.addEventListener('click', dismiss);
+  if(installBtn) installBtn.addEventListener('click', async ()=>{
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+    }
+    dismiss();
   });
 
-  // iOS Safari has no beforeinstallprompt — show manual instructions instead
-  const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if(isIOS && !isStandalone() && localStorage.getItem(DISMISS_KEY)!=='1'){
-    setTimeout(()=>{
-      document.querySelector('#install-banner .ib-sub').textContent='Tap the Share icon, then "Add to Home Screen"';
-      installBtn.textContent='Got it';
-      installBtn.addEventListener('click',()=>{
-        banner.classList.remove('show');
-        localStorage.setItem(DISMISS_KEY,'1');
-      });
-      banner.classList.add('show');
-    },1200);
+  /* Android / Chrome: native install prompt */
+  window.addEventListener('beforeinstallprompt',(e)=>{
+    e.preventDefault();
+    deferredPrompt = e;
+    setTimeout(showBanner, 1200);
+  });
+
+  /* iOS Safari: no beforeinstallprompt — show manual instructions */
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if(isIOS){
+    const sub = banner.querySelector('.ib-sub');
+    if(sub) sub.textContent = 'Tap the Share icon, then "Add to Home Screen"';
+    if(installBtn) installBtn.textContent = 'Got it';
+    setTimeout(showBanner, 1200);
   }
 })();
 </script>

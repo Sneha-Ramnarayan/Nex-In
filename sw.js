@@ -1,5 +1,5 @@
 // Nex-In service worker — caches the app shell for offline/installed use.
-const CACHE_NAME = 'nexin-v30-icon-bg';
+const CACHE_NAME = 'nexin-v32-search-tab';
 const APP_SHELL = [
   './index.html',
   './manifest.json',

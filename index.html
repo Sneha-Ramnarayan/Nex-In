@@ -374,23 +374,24 @@ main { padding-top: calc(var(--header-h) + 16px); padding-left: 16px; padding-ri
 
 /* ── Install banner ── */
 #install-banner {
+  display: none;
   position: fixed; left: 14px; right: 14px;
   bottom: calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 12px);
   z-index: 400;
   background: var(--accent); color: #fff;
   border-radius: var(--r-lg);
   padding: 14px 14px 14px 16px;
-  display: flex; align-items: center; gap: 12px;
+  align-items: center; gap: 12px;
   box-shadow: 0 12px 32px rgba(0,0,0,0.25);
-  transform: translateY(120%); transition: transform .3s ease;
+  animation: slideUp .3s ease forwards;
 }
-#install-banner.show { transform: translateY(0); }
+@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
 #install-banner .ib-icon { width:38px;height:38px;border-radius:11px;flex-shrink:0; }
 #install-banner .ib-text { flex:1; min-width:0; }
 #install-banner .ib-title { font-size:13px; font-weight:700; }
 #install-banner .ib-sub { font-size:11px; color:rgba(255,255,255,.6); margin-top:1px; }
-#install-banner button.ib-install { background:var(--gold); color:#fff; font-size:12px; font-weight:700; padding:9px 14px; border-radius:10px; flex-shrink:0; }
-#install-banner button.ib-close { width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-size:16px;flex-shrink:0;display:grid;place-items:center; }
+#install-banner button.ib-install { background:var(--gold); color:#fff; font-size:12px; font-weight:700; padding:9px 14px; border-radius:10px; flex-shrink:0; cursor:pointer; border:none; }
+#install-banner button.ib-close { width:28px;height:28px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-size:16px;flex-shrink:0;display:grid;place-items:center;cursor:pointer;border:none; }
 </style>
 </head>
 <body>
@@ -1347,50 +1348,49 @@ if('serviceWorker' in navigator){
 
 /* ─── Install banner ─── */
 (function(){
-  const DISMISS_KEY = 'ni_install_dismissed';
-  const banner      = document.getElementById('install-banner');
-  const installBtn  = document.getElementById('ib-install-btn');
-  const closeBtn    = document.getElementById('ib-close-btn');
-  let deferredPrompt = null;
+  var KEY     = 'ni_ib';
+  var banner  = document.getElementById('install-banner');
+  var closeBtn= document.getElementById('ib-close-btn');
+  var instBtn = document.getElementById('ib-install-btn');
+  var deferred= null;
 
-  function isDismissed(){ return localStorage.getItem(DISMISS_KEY)==='1'; }
-  function isStandalone(){ return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true; }
-
-  function dismiss(){
-    banner.classList.remove('show');
-    localStorage.setItem(DISMISS_KEY,'1');
+  function hide(){
+    if(!banner) return;
+    banner.style.display = 'none';
+    try{ localStorage.setItem(KEY,'1'); }catch(e){}
   }
 
-  function showBanner(){
-    if(isDismissed() || isStandalone()) return;
-    banner.classList.add('show');
+  function isDone(){
+    try{ return localStorage.getItem(KEY)==='1'; }catch(e){ return false; }
   }
 
-  /* Both buttons always dismiss permanently */
-  if(closeBtn)   closeBtn.addEventListener('click', dismiss);
-  if(installBtn) installBtn.addEventListener('click', async ()=>{
-    if(deferredPrompt){
-      deferredPrompt.prompt();
-      await deferredPrompt.userChoice;
-      deferredPrompt = null;
-    }
-    dismiss();
-  });
+  function isAlone(){
+    return window.matchMedia('(display-mode: standalone)').matches
+        || window.navigator.standalone === true;
+  }
 
-  /* Android / Chrome: native install prompt */
-  window.addEventListener('beforeinstallprompt',(e)=>{
+  /* Wire buttons via onclick — simplest and most reliable cross-browser */
+  if(closeBtn) closeBtn.onclick = function(){ hide(); };
+  if(instBtn)  instBtn.onclick  = function(){
+    if(deferred){ deferred.prompt(); deferred=null; }
+    hide();
+  };
+
+  /* Android/Chrome native install prompt */
+  window.addEventListener('beforeinstallprompt', function(e){
     e.preventDefault();
-    deferredPrompt = e;
-    setTimeout(showBanner, 1200);
+    deferred = e;
+    if(isDone() || isAlone()) return;
+    setTimeout(function(){ if(banner) banner.style.display='flex'; }, 1200);
   });
 
-  /* iOS Safari: no beforeinstallprompt — show manual instructions */
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if(isIOS){
-    const sub = banner.querySelector('.ib-sub');
-    if(sub) sub.textContent = 'Tap the Share icon, then "Add to Home Screen"';
-    if(installBtn) installBtn.textContent = 'Got it';
-    setTimeout(showBanner, 1200);
+  /* iOS Safari — no beforeinstallprompt, show instructions instead */
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if(isIOS && !isAlone() && !isDone()){
+    var sub = banner ? banner.querySelector('.ib-sub') : null;
+    if(sub) sub.textContent = 'Tap the Share icon \u2197, then \u201cAdd to Home Screen\u201d';
+    if(instBtn) instBtn.textContent = 'Got it';
+    setTimeout(function(){ if(banner) banner.style.display='flex'; }, 1200);
   }
 })();
 </script>

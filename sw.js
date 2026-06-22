@@ -1,17 +1,18 @@
-// Nex-In service worker — caches the app shell for offline/installed use.
-const CACHE_NAME = 'nexin-v32-search-tab';
-const APP_SHELL = [
-  './index.html',
+const CACHE_NAME = 'nexin-v33-banner-final';
+// index.html is NEVER cached — always fetched fresh so updates reach users immediately.
+const CACHE_NAME = 'nexin-v33';
+const STATIC_SHELL = [
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
   './icon-maskable-512.png',
-  './wordmark-dark.png'
+  './wordmark-dark.png',
+  './favicon.png'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_SHELL))
   );
   self.skipWaiting();
 });
@@ -25,35 +26,42 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Cache-first for app shell files, network-first (with cache fallback) for everything else
-// (product images load from remote CDNs and should stay fresh when online).
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
-  const isAppShell = url.origin === self.location.origin;
+  const isHTML = req.destination === 'document' || url.pathname.endsWith('.html') || url.pathname.endsWith('/');
 
-  if (isAppShell) {
+  // index.html: always network-first, no caching — ensures updates always land
+  if (isHTML) {
     event.respondWith(
-      caches.match(req).then((cached) => {
-        if (cached) return cached;
-        return fetch(req).then((res) => {
-          const resClone = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
-          return res;
-        });
-      })
+      fetch(req).catch(() => caches.match('./index.html'))
     );
-  } else {
-    event.respondWith(
-      fetch(req)
-        .then((res) => {
-          const resClone = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
-          return res;
-        })
-        .catch(() => caches.match(req))
-    );
+    return;
   }
+
+  // Static shell assets: cache-first
+  const isShell = STATIC_SHELL.some(s => url.pathname.endsWith(s.replace('./','')));
+  if (url.origin === self.location.origin && isShell) {
+    event.respondWith(
+      caches.match(req).then(cached => cached || fetch(req).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then(c => c.put(req, clone));
+        return res;
+      }))
+    );
+    return;
+  }
+
+  // Everything else (CDN images etc): network with cache fallback
+  event.respondWith(
+    fetch(req)
+      .then(res => {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then(c => c.put(req, clone));
+        return res;
+      })
+      .catch(() => caches.match(req))
+  );
 });

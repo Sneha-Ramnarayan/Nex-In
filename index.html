@@ -8,8 +8,10 @@
 <!-- PWA -->
 <link rel="manifest" href="manifest.json"/>
 <meta name="theme-color" content="#2D2926"/>
-<link rel="icon" href="icon-192.png"/>
-<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=34"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=34"/>
+<link rel="shortcut icon" type="image/png" href="favicon-32.png?v=34"/>
+<link rel="apple-touch-icon" href="icon-192.png?v=34"/>
 
 <!-- iOS standalone app behavior -->
 <meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -449,129 +451,333 @@ function fmtMoney(n, country){
 
 /* ─── Products ─── */
 const PRODUCTS = [
+
+  /* ═══════════════════════════════════════════════
+     INDIA (IN) — Myntra, Ajio, Tata Cliq, Flipkart, Nykaa Fashion
+  ═══════════════════════════════════════════════ */
   {
-    id:1, name:'Minimalist Leather Tote', brand:'Miraggio', category:'Bags', type:'accessory',
+    id:101, country:'IN', name:'Miraggio Structured Leather Tote', brand:'Miraggio', category:'Bags', type:'accessory',
     image:'https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg',
-    desc:'Structured leather tote with clean lines and everyday utility.',
+    desc:'Clean-lined structured tote in premium faux leather — an everyday essential.',
     sizes:['One Size'],
-    prices:{
-      IN:[{pl:'Myntra',p:3499,o:4999},{pl:'Ajio',p:3550,o:4999},{pl:'Tata Cliq',p:3499,o:4999}],
-      US:[{pl:'Myntra',p:42,o:60},{pl:'Ajio',p:43,o:60},{pl:'Tata Cliq',p:42,o:60}],
-      GB:[{pl:'Myntra',p:33,o:48},{pl:'Ajio',p:34,o:48},{pl:'Tata Cliq',p:33,o:48}],
-      EU:[{pl:'Myntra',p:39,o:56},{pl:'Ajio',p:40,o:56},{pl:'Tata Cliq',p:39,o:56}],
-      AE:[{pl:'Myntra',p:154,o:220},{pl:'Ajio',p:156,o:220},{pl:'Tata Cliq',p:154,o:220}],
-      AU:[{pl:'Myntra',p:63,o:90},{pl:'Ajio',p:64,o:90},{pl:'Tata Cliq',p:63,o:90}],
-      CA:[{pl:'Myntra',p:57,o:81},{pl:'Ajio',p:58,o:81},{pl:'Tata Cliq',p:57,o:81}]
-    }
+    prices:[{pl:'Myntra',p:3499,o:4999,link:'#'},{pl:'Ajio',p:3650,o:4999,link:'#'},{pl:'Tata Cliq',p:3499,o:4999,link:'#'}]
   },
   {
-    id:2, name:'Oversized Knit Jumper', brand:'Zara', category:'Apparel', type:'top',
+    id:102, country:'IN', name:'Zara Oversized Knit Jumper', brand:'Zara', category:'Apparel', type:'top',
     image:'https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280',
-    desc:'Heavy-gauge knit with a relaxed shoulder and cozy drape.',
+    desc:'Heavy-gauge knit with a relaxed shoulder — effortless layering for cooler days.',
     sizes:['XS','S','M','L','XL'],
-    prices:{
-      IN:[{pl:'Zara',p:1899,o:2299},{pl:'Myntra',p:2099,o:2299},{pl:'ASOS',p:1950,o:2299}],
-      US:[{pl:'Zara',p:23,o:28},{pl:'Myntra',p:25,o:28},{pl:'ASOS',p:24,o:28}],
-      GB:[{pl:'Zara',p:18,o:22},{pl:'Myntra',p:20,o:22},{pl:'ASOS',p:19,o:22}],
-      EU:[{pl:'Zara',p:21,o:25},{pl:'Myntra',p:23,o:25},{pl:'ASOS',p:22,o:25}],
-      AE:[{pl:'Zara',p:84,o:102},{pl:'Myntra',p:93,o:102},{pl:'ASOS',p:87,o:102}],
-      AU:[{pl:'Zara',p:35,o:42},{pl:'Myntra',p:38,o:42},{pl:'ASOS',p:36,o:42}],
-      CA:[{pl:'Zara',p:31,o:37},{pl:'Myntra',p:34,o:37},{pl:'ASOS',p:32,o:37}]
-    }
+    prices:[{pl:'Zara',p:2290,o:2990,link:'#'},{pl:'Myntra',p:2490,o:2990,link:'#'},{pl:'Ajio',p:2390,o:2990,link:'#'}]
   },
   {
-    id:3, name:'Speedcat OG Sneakers', brand:'Puma', category:'Footwear', type:'shoe',
-    image:"https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_900,h_900/global/400986/31/mod01/fnd/PNA/fmt/png/Speedcat-OG-Women's-Sneakers",
-    desc:'Breathable mesh and responsive cushioning for daily movement.',
-    sizes:['EU 35','EU 36','EU 37','EU 38','EU 39','EU 40','EU 41'],
-    prices:{
-      IN:[{pl:'Puma',p:4999,o:6599},{pl:'Flipkart',p:5100,o:6599},{pl:'ASOS',p:5200,o:6599}],
-      US:[{pl:'Puma',p:60,o:79},{pl:'Flipkart',p:61,o:79},{pl:'ASOS',p:62,o:79}],
-      GB:[{pl:'Puma',p:47,o:62},{pl:'Flipkart',p:48,o:62},{pl:'ASOS',p:49,o:62}],
-      EU:[{pl:'Puma',p:55,o:72},{pl:'Flipkart',p:56,o:72},{pl:'ASOS',p:57,o:72}],
-      AE:[{pl:'Puma',p:220,o:290},{pl:'Flipkart',p:225,o:290},{pl:'ASOS',p:229,o:290}],
-      AU:[{pl:'Puma',p:90,o:119},{pl:'Flipkart',p:92,o:119},{pl:'ASOS',p:94,o:119}],
-      CA:[{pl:'Puma',p:81,o:107},{pl:'Flipkart',p:83,o:107},{pl:'ASOS',p:84,o:107}]
-    }
-  },
-  {
-    id:4, name:'Deep Navy Linen Shirt', brand:'H&M', category:'Apparel', type:'top',
-    image:'https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536',
-    desc:'Lightweight linen shirt with a crisp silhouette.',
-    sizes:['XS','S','M','L','XL'],
-    prices:{
-      IN:[{pl:'H&M',p:1299,o:1499},{pl:'Myntra',p:1349,o:1499},{pl:'Zalando',p:1280,o:1499}],
-      US:[{pl:'H&M',p:16,o:18},{pl:'Myntra',p:16,o:18},{pl:'Zalando',p:15,o:18}],
-      GB:[{pl:'H&M',p:12,o:14},{pl:'Myntra',p:13,o:14},{pl:'Zalando',p:12,o:14}],
-      EU:[{pl:'H&M',p:14,o:17},{pl:'Myntra',p:15,o:17},{pl:'Zalando',p:14,o:17}],
-      AE:[{pl:'H&M',p:57,o:66},{pl:'Myntra',p:59,o:66},{pl:'Zalando',p:56,o:66}],
-      AU:[{pl:'H&M',p:23,o:27},{pl:'Myntra',p:24,o:27},{pl:'Zalando',p:23,o:27}],
-      CA:[{pl:'H&M',p:21,o:24},{pl:'Myntra',p:22,o:24},{pl:'Zalando',p:20,o:24}]
-    }
-  },
-  {
-    id:5, name:'Classic Straight Jeans', brand:"Levi's", category:'Apparel', type:'bottom',
+    id:103, country:'IN', name:'Levi's 511 Slim Fit Jeans', brand:"Levi's", category:'Apparel', type:'bottom',
     image:'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80',
-    desc:'Straight-leg denim with a timeless fit and clean wash.',
-    sizes:['26','28','30','32','34','36','38'],
-    prices:{
-      IN:[{pl:"Levi's",p:2999,o:3999},{pl:'Myntra',p:3099,o:3999},{pl:'Amazon',p:2850,o:3999}],
-      US:[{pl:"Levi's",p:36,o:48},{pl:'Myntra',p:37,o:48},{pl:'Amazon',p:34,o:48}],
-      GB:[{pl:"Levi's",p:28,o:38},{pl:'Myntra',p:29,o:38},{pl:'Amazon',p:27,o:38}],
-      EU:[{pl:"Levi's",p:33,o:44},{pl:'Myntra',p:34,o:44},{pl:'Amazon',p:31,o:44}],
-      AE:[{pl:"Levi's",p:132,o:176},{pl:'Myntra',p:136,o:176},{pl:'Amazon',p:125,o:176}],
-      AU:[{pl:"Levi's",p:54,o:72},{pl:'Myntra',p:56,o:72},{pl:'Amazon',p:51,o:72}],
-      CA:[{pl:"Levi's",p:48,o:64},{pl:'Myntra',p:50,o:64},{pl:'Amazon',p:46,o:64}]
-    }
+    desc:'Iconic slim-fit denim in a versatile mid-blue wash. Goes with everything.',
+    sizes:['28','30','32','34','36','38'],
+    prices:[{pl:"Myntra",p:2799,o:3999,link:'#'},{pl:'Flipkart',p:2999,o:3999,link:'#'},{pl:'Ajio',p:2849,o:3999,link:'#'}]
   },
   {
-    id:6, name:'Satin Camisole Midi Dress', brand:'Mango', category:'Apparel', type:'dress',
+    id:104, country:'IN', name:'Mango Satin Midi Dress', brand:'Mango', category:'Apparel', type:'dress',
     image:'https://shop.mango.com/assets/rcs/pics/static/T4/fotos/S/47021299_78.jpg?imwidth=2048&imdensity=1&ts=1668519615897',
-    desc:'Midi slip dress with a fluid finish and elegant neckline.',
+    desc:'Fluid satin midi with elegant drape — perfect from day to evening.',
     sizes:['XS','S','M','L','XL'],
-    prices:{
-      IN:[{pl:'Mango',p:4500,o:5999},{pl:'Myntra',p:4450,o:5999},{pl:'ASOS',p:4300,o:5999}],
-      US:[{pl:'Mango',p:54,o:72},{pl:'Myntra',p:53,o:72},{pl:'ASOS',p:52,o:72}],
-      GB:[{pl:'Mango',p:42,o:56},{pl:'Myntra',p:42,o:56},{pl:'ASOS',p:40,o:56}],
-      EU:[{pl:'Mango',p:49,o:65},{pl:'Myntra',p:48,o:65},{pl:'ASOS',p:47,o:65}],
-      AE:[{pl:'Mango',p:198,o:264},{pl:'Myntra',p:196,o:264},{pl:'ASOS',p:189,o:264}],
-      AU:[{pl:'Mango',p:81,o:108},{pl:'Myntra',p:80,o:108},{pl:'ASOS',p:77,o:108}],
-      CA:[{pl:'Mango',p:73,o:97},{pl:'Myntra',p:72,o:97},{pl:'ASOS',p:69,o:97}]
-    }
+    prices:[{pl:'Myntra',p:4299,o:5999,link:'#'},{pl:'Ajio',p:4499,o:5999,link:'#'},{pl:'Nykaa Fashion',p:4199,o:5999,link:'#'}]
   },
   {
-    id:7, name:'Legacy Celestial Watch', brand:'Timex', category:'Accessories', type:'accessory',
-    image:'https://timex.com/cdn/shop/files/TW2Y20200_M.jpg?v=1760446793&width=768',
-    desc:'Midnight dial with a slim profile and polished detail.',
-    sizes:['One Size'],
-    prices:{
-      IN:[{pl:'Flipkart',p:1999,o:2499},{pl:'Ajio',p:2050,o:2499}],
-      US:[{pl:'Flipkart',p:24,o:30},{pl:'Ajio',p:25,o:30}],
-      GB:[{pl:'Flipkart',p:19,o:24},{pl:'Ajio',p:19,o:24}],
-      EU:[{pl:'Flipkart',p:22,o:27},{pl:'Ajio',p:22,o:27}],
-      AE:[{pl:'Flipkart',p:88,o:110},{pl:'Ajio',p:90,o:110}],
-      AU:[{pl:'Flipkart',p:36,o:45},{pl:'Ajio',p:37,o:45}],
-      CA:[{pl:'Flipkart',p:32,o:40},{pl:'Ajio',p:33,o:40}]
-    }
+    id:105, country:'IN', name:'Puma Speedcat OG Sneakers', brand:'Puma', category:'Footwear', type:'shoe',
+    image:"https://images.puma.com/image/upload/f_auto,q_auto,b_rgb:fafafa,w_900,h_900/global/400986/31/mod01/fnd/PNA/fmt/png/Speedcat-OG-Women's-Sneakers",
+    desc:'Retro motorsport silhouette with a low-profile sole. A street style staple.',
+    sizes:['UK 4','UK 5','UK 6','UK 7','UK 8'],
+    prices:[{pl:'Myntra',p:7999,o:9999,link:'#'},{pl:'Flipkart',p:8199,o:9999,link:'#'},{pl:'Puma.com',p:7999,o:9999,link:'#'}]
   },
   {
-    id:8, name:'Soft Structure Blazer', brand:'Mango', category:'Apparel', type:'top',
+    id:106, country:'IN', name:'H&M Linen Blend Blazer', brand:'H&M', category:'Apparel', type:'top',
     image:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80',
-    desc:'Relaxed tailored blazer designed for layered dressing.',
+    desc:'Lightweight linen-blend blazer with a relaxed cut — smart-casual done right.',
     sizes:['XS','S','M','L','XL'],
-    prices:{
-      IN:[{pl:'Mango',p:5499,o:6999},{pl:'Zara',p:5699,o:6999}],
-      US:[{pl:'Mango',p:66,o:84},{pl:'Zara',p:68,o:84}],
-      GB:[{pl:'Mango',p:52,o:66},{pl:'Zara',p:54,o:66}],
-      EU:[{pl:'Mango',p:60,o:76},{pl:'Zara',p:62,o:76}],
-      AE:[{pl:'Mango',p:242,o:308},{pl:'Zara',p:251,o:308}],
-      AU:[{pl:'Mango',p:99,o:126},{pl:'Zara',p:102,o:126}],
-      CA:[{pl:'Mango',p:89,o:113},{pl:'Zara',p:92,o:113}]
-    }
+    prices:[{pl:'H&M',p:3499,o:4999,link:'#'},{pl:'Myntra',p:3699,o:4999,link:'#'},{pl:'Ajio',p:3599,o:4999,link:'#'}]
+  },
+
+  /* ═══════════════════════════════════════════════
+     USA (US) — Amazon Fashion, Nordstrom, ASOS, Macy's, Zappos
+  ═══════════════════════════════════════════════ */
+  {
+    id:201, country:'US', name:'Coach Pillow Tabby Shoulder Bag', brand:'Coach', category:'Bags', type:'accessory',
+    image:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=900&q=80',
+    desc:'Puffed leather shoulder bag in Coach's iconic Tabby silhouette. Luxe yet casual.',
+    sizes:['One Size'],
+    prices:[{pl:'Coach.com',p:395,o:495,link:'#'},{pl:'Nordstrom',p:395,o:495,link:'#'},{pl:'Macy's',p:375,o:495,link:'#'}]
+  },
+  {
+    id:202, country:'US', name:'Levi's 501 Original Jeans', brand:"Levi's", category:'Apparel', type:'bottom',
+    image:'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80',
+    desc:'The original straight-leg jean. Timeless, durable, and endlessly versatile.',
+    sizes:['26','27','28','29','30','32','34'],
+    prices:[{pl:'Levi's',p:59,o:79,link:'#'},{pl:'Amazon Fashion',p:54,o:79,link:'#'},{pl:'Macy's',p:57,o:79,link:'#'}]
+  },
+  {
+    id:203, country:'US', name:'Nike Air Max 270 Sneakers', brand:'Nike', category:'Footwear', type:'shoe',
+    image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80',
+    desc:'Max Air cushioning meets lifestyle design. All-day comfort in a bold silhouette.',
+    sizes:['US 6','US 7','US 8','US 9','US 10','US 11'],
+    prices:[{pl:'Nike.com',p:150,o:160,link:'#'},{pl:'Zappos',p:150,o:160,link:'#'},{pl:'Amazon Fashion',p:139,o:160,link:'#'}]
+  },
+  {
+    id:204, country:'US', name:'Ralph Lauren Striped Oxford Shirt', brand:'Ralph Lauren', category:'Apparel', type:'top',
+    image:'https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536',
+    desc:'Classic Oxford cloth shirt in a signature stripe — polished and effortlessly preppy.',
+    sizes:['XS','S','M','L','XL','XXL'],
+    prices:[{pl:'Ralph Lauren',p:89,o:125,link:'#'},{pl:'Nordstrom',p:89,o:125,link:'#'},{pl:'Macy's',p:79,o:125,link:'#'}]
+  },
+  {
+    id:205, country:'US', name:'Zara Satin Slip Dress', brand:'Zara', category:'Apparel', type:'dress',
+    image:'https://shop.mango.com/assets/rcs/pics/static/T4/fotos/S/47021299_78.jpg?imwidth=2048&imdensity=1&ts=1668519615897',
+    desc:'Minimalist satin slip with thin straps and a bias-cut hem. Effortlessly chic.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Zara',p:49,o:69,link:'#'},{pl:'ASOS',p:52,o:69,link:'#'},{pl:'Nordstrom',p:49,o:69,link:'#'}]
+  },
+  {
+    id:206, country:'US', name:'Free People Movement Leggings', brand:'Free People', category:'Apparel', type:'bottom',
+    image:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=900&q=80',
+    desc:'High-rise leggings with four-way stretch — built for movement, styled for everything.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Free People',p:78,o:98,link:'#'},{pl:'Nordstrom',p:78,o:98,link:'#'},{pl:'Amazon Fashion',p:69,o:98,link:'#'}]
+  },
+
+  /* ═══════════════════════════════════════════════
+     UK (GB) — ASOS, M&S, Next, John Lewis, & Other Stories
+  ═══════════════════════════════════════════════ */
+  {
+    id:301, country:'GB', name:'& Other Stories Suede Bucket Bag', brand:'& Other Stories', category:'Bags', type:'accessory',
+    image:'https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg',
+    desc:'Buttery suede bucket bag with a drawstring top — understated European luxury.',
+    sizes:['One Size'],
+    prices:[{pl:'& Other Stories',p:95,o:115,link:'#'},{pl:'ASOS',p:99,o:115,link:'#'},{pl:'John Lewis',p:95,o:115,link:'#'}]
+  },
+  {
+    id:302, country:'GB', name:'Topshop Straight Leg Jeans', brand:'Topshop', category:'Apparel', type:'bottom',
+    image:'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80',
+    desc:'Clean straight-leg denim in a mid-rise fit. The everyday essential.',
+    sizes:['6','8','10','12','14','16'],
+    prices:[{pl:'ASOS',p:35,o:49,link:'#'},{pl:'Topshop',p:38,o:49,link:'#'},{pl:'Next',p:36,o:49,link:'#'}]
+  },
+  {
+    id:303, country:'GB', name:'Nike Air Force 1 '07', brand:'Nike', category:'Footwear', type:'shoe',
+    image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80',
+    desc:'The classic low-top trainer in clean white. An all-time icon that goes with anything.',
+    sizes:['UK 3','UK 4','UK 5','UK 6','UK 7','UK 8'],
+    prices:[{pl:'Nike.com',p:109,o:109,link:'#'},{pl:'ASOS',p:99,o:109,link:'#'},{pl:'JD Sports',p:104,o:109,link:'#'}]
+  },
+  {
+    id:304, country:'GB', name:'M&S Cotton Linen Blazer', brand:'M&S', category:'Apparel', type:'top',
+    image:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80',
+    desc:'Soft-structure blazer in a breathable cotton-linen mix. Smart without the stiffness.',
+    sizes:['6','8','10','12','14','16','18'],
+    prices:[{pl:'M&S',p:69,o:89,link:'#'},{pl:'John Lewis',p:72,o:89,link:'#'},{pl:'Next',p:65,o:89,link:'#'}]
+  },
+  {
+    id:305, country:'GB', name:'ASOS Design Wrap Midi Dress', brand:'ASOS Design', category:'Apparel', type:'dress',
+    image:'https://shop.mango.com/assets/rcs/pics/static/T4/fotos/S/47021299_78.jpg?imwidth=2048&imdensity=1&ts=1668519615897',
+    desc:'Floaty wrap midi in a floral print — flattering, versatile and easy to style.',
+    sizes:['4','6','8','10','12','14','16'],
+    prices:[{pl:'ASOS',p:38,o:55,link:'#'},{pl:'Next',p:40,o:55,link:'#'},{pl:'Very',p:36,o:55,link:'#'}]
+  },
+  {
+    id:306, country:'GB', name:'Ted Baker Knitted Roll Neck', brand:'Ted Baker', category:'Apparel', type:'top',
+    image:'https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280',
+    desc:'Soft merino-blend roll neck in a relaxed fit. Polished winter layering.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Ted Baker',p:110,o:140,link:'#'},{pl:'John Lewis',p:110,o:140,link:'#'},{pl:'ASOS',p:99,o:140,link:'#'}]
+  },
+
+  /* ═══════════════════════════════════════════════
+     EUROPE (EU) — Zalando, AboutYou, H&M, Mango, Zara
+  ═══════════════════════════════════════════════ */
+  {
+    id:401, country:'EU', name:'Mango Leather Crossbody Bag', brand:'Mango', category:'Bags', type:'accessory',
+    image:'https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg',
+    desc:'Compact crossbody in smooth leather with a gold-toned chain strap.',
+    sizes:['One Size'],
+    prices:[{pl:'Mango',p:59,o:79,link:'#'},{pl:'Zalando',p:62,o:79,link:'#'},{pl:'AboutYou',p:57,o:79,link:'#'}]
+  },
+  {
+    id:402, country:'EU', name:'H&M Wide Leg Trousers', brand:'H&M', category:'Apparel', type:'bottom',
+    image:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=900&q=80',
+    desc:'High-waisted wide-leg trousers in a flowing fabric — effortlessly European.',
+    sizes:['32','34','36','38','40','42'],
+    prices:[{pl:'H&M',p:29,o:39,link:'#'},{pl:'Zalando',p:32,o:39,link:'#'},{pl:'AboutYou',p:29,o:39,link:'#'}]
+  },
+  {
+    id:403, country:'EU', name:'Adidas Stan Smith Sneakers', brand:'Adidas', category:'Footwear', type:'shoe',
+    image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80',
+    desc:'The court-to-street classic. Clean white leather with the iconic green heel tab.',
+    sizes:['EU 36','EU 37','EU 38','EU 39','EU 40','EU 41','EU 42'],
+    prices:[{pl:'Adidas',p:100,o:100,link:'#'},{pl:'Zalando',p:89,o:100,link:'#'},{pl:'AboutYou',p:85,o:100,link:'#'}]
+  },
+  {
+    id:404, country:'EU', name:'Zara Oversized Shirt', brand:'Zara', category:'Apparel', type:'top',
+    image:'https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536',
+    desc:'Relaxed oversized shirt in crisp poplin — the cornerstone of effortless dressing.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Zara',p:25,o:35,link:'#'},{pl:'Zalando',p:27,o:35,link:'#'},{pl:'H&M',p:24,o:35,link:'#'}]
+  },
+  {
+    id:405, country:'EU', name:'Mango Satin Wrap Dress', brand:'Mango', category:'Apparel', type:'dress',
+    image:'https://shop.mango.com/assets/rcs/pics/static/T4/fotos/S/47021299_78.jpg?imwidth=2048&imdensity=1&ts=1668519615897',
+    desc:'Elegant wrap silhouette in a liquid satin finish — from desk to dinner seamlessly.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Mango',p:69,o:89,link:'#'},{pl:'Zalando',p:72,o:89,link:'#'},{pl:'AboutYou',p:65,o:89,link:'#'}]
+  },
+  {
+    id:406, country:'EU', name:'Scotch & Soda Knit Cardigan', brand:'Scotch & Soda', category:'Apparel', type:'top',
+    image:'https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280',
+    desc:'Open-front cardigan in a cotton-blend knit with subtle texture. Relaxed Amsterdam style.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Scotch & Soda',p:99,o:129,link:'#'},{pl:'Zalando',p:95,o:129,link:'#'},{pl:'AboutYou',p:89,o:129,link:'#'}]
+  },
+
+  /* ═══════════════════════════════════════════════
+     UAE (AE) — Namshi, Noon Fashion, Ounass, Level Shoes, ASOS
+  ═══════════════════════════════════════════════ */
+  {
+    id:501, country:'AE', name:'Michael Kors Jet Set Tote', brand:'Michael Kors', category:'Bags', type:'accessory',
+    image:'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=900&q=80',
+    desc:'Signature MK logo tote in saffiano leather — polished, spacious and iconic.',
+    sizes:['One Size'],
+    prices:[{pl:'Ounass',p:850,o:1100,link:'#'},{pl:'Namshi',p:820,o:1100,link:'#'},{pl:'Noon Fashion',p:799,o:1100,link:'#'}]
+  },
+  {
+    id:502, country:'AE', name:'Mango Linen Wide Leg Pants', brand:'Mango', category:'Apparel', type:'bottom',
+    image:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?auto=format&fit=crop&w=900&q=80',
+    desc:'Breezy linen-blend wide-leg trousers — the perfect answer to warm-weather dressing.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Namshi',p:199,o:279,link:'#'},{pl:'Mango',p:219,o:279,link:'#'},{pl:'Ounass',p:209,o:279,link:'#'}]
+  },
+  {
+    id:503, country:'AE', name:'Nike React Infinity Run', brand:'Nike', category:'Footwear', type:'shoe',
+    image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80',
+    desc:'High-mileage running shoe with React foam cushioning and a wide, stable base.',
+    sizes:['EU 36','EU 37','EU 38','EU 39','EU 40','EU 41'],
+    prices:[{pl:'Nike.com',p:649,o:749,link:'#'},{pl:'Namshi',p:599,o:749,link:'#'},{pl:'Noon Fashion',p:579,o:749,link:'#'}]
+  },
+  {
+    id:504, country:'AE', name:'Zara Flowy Studio Top', brand:'Zara', category:'Apparel', type:'top',
+    image:'https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536',
+    desc:'Lightweight floaty top in a relaxed silhouette — perfect for warm evenings.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Zara',p:149,o:199,link:'#'},{pl:'Namshi',p:155,o:199,link:'#'},{pl:'Ounass',p:145,o:199,link:'#'}]
+  },
+  {
+    id:505, country:'AE', name:'H&M Sequin Midi Dress', brand:'H&M', category:'Apparel', type:'dress',
+    image:'https://shop.mango.com/assets/rcs/pics/static/T4/fotos/S/47021299_78.jpg?imwidth=2048&imdensity=1&ts=1668519615897',
+    desc:'All-over sequin midi with a straight neckline — statement dressing made easy.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'H&M',p:399,o:499,link:'#'},{pl:'Namshi',p:419,o:499,link:'#'},{pl:'Noon Fashion',p:389,o:499,link:'#'}]
+  },
+  {
+    id:506, country:'AE', name:'Tommy Hilfiger Polo Shirt', brand:'Tommy Hilfiger', category:'Apparel', type:'top',
+    image:'https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280',
+    desc:'Classic piqué polo with embroidered flag logo. Preppy heritage meets everyday ease.',
+    sizes:['XS','S','M','L','XL','XXL'],
+    prices:[{pl:'Tommy Hilfiger',p:299,o:399,link:'#'},{pl:'Namshi',p:279,o:399,link:'#'},{pl:'Ounass',p:289,o:399,link:'#'}]
+  },
+
+  /* ═══════════════════════════════════════════════
+     AUSTRALIA (AU) — The Iconic, David Jones, Myer, ASOS AU, Cotton On
+  ═══════════════════════════════════════════════ */
+  {
+    id:601, country:'AU', name:'Country Road Leather Tote', brand:'Country Road', category:'Bags', type:'accessory',
+    image:'https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg',
+    desc:'Refined leather tote with a clean silhouette. Australian minimalism at its best.',
+    sizes:['One Size'],
+    prices:[{pl:'Country Road',p:249,o:329,link:'#'},{pl:'David Jones',p:249,o:329,link:'#'},{pl:'The Iconic',p:239,o:329,link:'#'}]
+  },
+  {
+    id:602, country:'AU', name:'Levi's 70s High Flare Jeans', brand:"Levi's", category:'Apparel', type:'bottom',
+    image:'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80',
+    desc:'High-rise flare jeans with a retro silhouette — the relaxed, vintage-inspired cut.',
+    sizes:['24','25','26','27','28','29','30'],
+    prices:[{pl:'Levi's',p:129,o:169,link:'#'},{pl:'The Iconic',p:129,o:169,link:'#'},{pl:'David Jones',p:135,o:169,link:'#'}]
+  },
+  {
+    id:603, country:'AU', name:'New Balance 574 Sneakers', brand:'New Balance', category:'Footwear', type:'shoe',
+    image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80',
+    desc:'Suede and mesh upper with ENCAP midsole cushioning. The heritage runner reborn.',
+    sizes:['AU 5','AU 6','AU 7','AU 8','AU 9','AU 10'],
+    prices:[{pl:'New Balance',p:170,o:200,link:'#'},{pl:'The Iconic',p:159,o:200,link:'#'},{pl:'Myer',p:165,o:200,link:'#'}]
+  },
+  {
+    id:604, country:'AU', name:'Witchery Linen Blend Shirt', brand:'Witchery', category:'Apparel', type:'top',
+    image:'https://image.hm.com/assets/hm/9e/80/9e806c434b558d496d29e41d626044760d1c05f3.jpg?imwidth=1536',
+    desc:'Relaxed linen-blend shirt with a curved hem — Australian summer staple.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Witchery',p:89,o:119,link:'#'},{pl:'David Jones',p:89,o:119,link:'#'},{pl:'The Iconic',p:85,o:119,link:'#'}]
+  },
+  {
+    id:605, country:'AU', name:'ASOS Design Floral Maxi Dress', brand:'ASOS Design', category:'Apparel', type:'dress',
+    image:'https://shop.mango.com/assets/rcs/pics/static/T4/fotos/S/47021299_78.jpg?imwidth=2048&imdensity=1&ts=1668519615897',
+    desc:'Flowy floral maxi with adjustable straps — made for warm Australian evenings.',
+    sizes:['6','8','10','12','14','16'],
+    prices:[{pl:'ASOS',p:55,o:75,link:'#'},{pl:'The Iconic',p:58,o:75,link:'#'},{pl:'Myer',p:52,o:75,link:'#'}]
+  },
+  {
+    id:606, country:'AU', name:'Cotton On Oversized Blazer', brand:'Cotton On', category:'Apparel', type:'top',
+    image:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80',
+    desc:'Relaxed oversized blazer in a textured fabric. Elevated basics with an edge.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Cotton On',p:79,o:99,link:'#'},{pl:'The Iconic',p:79,o:99,link:'#'},{pl:'Myer',p:75,o:99,link:'#'}]
+  },
+
+  /* ═══════════════════════════════════════════════
+     CANADA (CA) — Nordstrom CA, SSENSE, Hudson's Bay, Simons, Roots
+  ═══════════════════════════════════════════════ */
+  {
+    id:701, country:'CA', name:'Roots Leather Village Bag', brand:'Roots', category:'Bags', type:'accessory',
+    image:'https://m.media-amazon.com/images/I/811Pt0ZEo7L._AC_CR0%2C0%2C0%2C0_SX960_SY720_.jpg',
+    desc:'Handcrafted in full-grain leather with antique brass hardware. A Canadian icon.',
+    sizes:['One Size'],
+    prices:[{pl:'Roots',p:298,o:378,link:'#'},{pl:"Hudson's Bay",p:298,o:378,link:'#'},{pl:'Simons',p:285,o:378,link:'#'}]
+  },
+  {
+    id:702, country:'CA', name:'Levi's Wedgie Straight Jeans', brand:"Levi's", category:'Apparel', type:'bottom',
+    image:'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=900&q=80',
+    desc:'High-rise straight jeans that lift and contour. The most flattering Levi's fit.',
+    sizes:['24','25','26','27','28','29','30','32'],
+    prices:[{pl:"Levi's",p:98,o:128,link:'#'},{pl:'Nordstrom',p:98,o:128,link:'#'},{pl:"Hudson's Bay",p:89,o:128,link:'#'}]
+  },
+  {
+    id:703, country:'CA', name:'Arc'teryx Atom Hoody', brand:"Arc'teryx", category:'Apparel', type:'top',
+    image:'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=80',
+    desc:'Lightweight synthetic insulation for cool-weather layering. Packable, warm, refined.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:"Arc'teryx",p:325,o:375,link:'#'},{pl:'Nordstrom',p:325,o:375,link:'#'},{pl:'SSENSE',p:310,o:375,link:'#'}]
+  },
+  {
+    id:704, country:'CA', name:'Nike Air Force 1 Sneakers', brand:'Nike', category:'Footwear', type:'shoe',
+    image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80',
+    desc:'The clean, timeless low-top. Leather upper, Air cushioning, endless versatility.',
+    sizes:['US 5','US 6','US 7','US 8','US 9','US 10','US 11'],
+    prices:[{pl:'Nike.com',p:140,o:140,link:'#'},{pl:'Nordstrom',p:130,o:140,link:'#'},{pl:'SSENSE',p:125,o:140,link:'#'}]
+  },
+  {
+    id:705, country:'CA', name:'Simons Floral Wrap Dress', brand:'Simons', category:'Apparel', type:'dress',
+    image:'https://shop.mango.com/assets/rcs/pics/static/T4/fotos/S/47021299_78.jpg?imwidth=2048&imdensity=1&ts=1668519615897',
+    desc:'Lightweight wrap dress in a delicate floral print — Canadian summer perfection.',
+    sizes:['XS','S','M','L','XL'],
+    prices:[{pl:'Simons',p:65,o:89,link:'#'},{pl:"Hudson's Bay",p:69,o:89,link:'#'},{pl:'Nordstrom',p:65,o:89,link:'#'}]
+  },
+  {
+    id:706, country:'CA', name:'Roots Oversized Fleece Hoodie', brand:'Roots', category:'Apparel', type:'top',
+    image:'https://static.zara.net/assets/public/0941/448d/84b448f9a06b/9c099cfea55e/02756141081-p/02756141081-p.jpg?ts=1761149252010&w=1280',
+    desc:'The original Roots hoodie in a cozy fleece. A Canadian wardrobe non-negotiable.',
+    sizes:['XS','S','M','L','XL','XXL'],
+    prices:[{pl:'Roots',p:118,o:148,link:'#'},{pl:"Hudson's Bay",p:118,o:148,link:'#'},{pl:'Simons',p:109,o:148,link:'#'}]
   }
+
 ];
 
-const CATS = ['All', ...new Set(PRODUCTS.map(p=>p.category))];
+function countryProducts(){ return PRODUCTS.filter(p=>p.country===profile.country); }
+const CATS_ALL = ['All', ...new Set(PRODUCTS.map(p=>p.category))];
 
 /* ─── App state ─── */
 let S = {
@@ -652,7 +858,7 @@ function recSize(p){
 }
 
 /* ─── Prices for current country ─── */
-function pricesFor(p){ return p.prices[profile.country]||p.prices['IN']||[]; }
+function pricesFor(p){ return p.prices||[]; }
 function minPrice(p){ const ps=pricesFor(p); return ps.length?Math.min(...ps.map(x=>x.p)):0; }
 function maxDisc(p){ const ps=pricesFor(p); return ps.length?Math.max(...ps.map(x=>Math.round((1-x.p/x.o)*100))):0; }
 function bestPlatform(p){ const ps=pricesFor(p); return ps.length?ps.reduce((a,b)=>a.p<b.p?a:b):{pl:'—',p:0,o:0}; }
@@ -806,7 +1012,8 @@ function buildApp(){
 
 /* ── Discover ── */
 function buildDiscover(){
-  const list=PRODUCTS.filter(p=>{
+  const cats = ['All',...new Set(countryProducts().map(p=>p.category))];
+  const list=countryProducts().filter(p=>{
     const inCat=S.cat==='All'||p.category===S.cat;
     const q=S.query.trim().toLowerCase();
     return inCat&&(!q||[p.name,p.brand,p.category,p.desc].join(' ').toLowerCase().includes(q));
@@ -825,7 +1032,7 @@ function buildDiscover(){
   </div>
 
   <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
-    ${CATS.map(c=>`<button class="chip${S.cat===c?' on':''}" style="flex-shrink:0" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
+    ${cats.map(c=>`<button class="chip${S.cat===c?' on':''}" style="flex-shrink:0" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
   </div>
 
   <div class="section-head">
@@ -969,7 +1176,7 @@ function buildProduct(){
 
 /* ── Search ── */
 function buildSearch(){
-  const list=PRODUCTS.filter(p=>{
+  const list=countryProducts().filter(p=>{
     const q=S.query.trim().toLowerCase();
     return !q||[p.name,p.brand,p.category,p.desc].join(' ').toLowerCase().includes(q);
   });
@@ -1008,7 +1215,7 @@ function buildSearch(){
   ${!list.length?`<div class="empty-state surface"><div class="empty-icon">🔍</div><div class="empty-title">No results</div><div class="empty-sub">Try a different search term or browse by category on the Home tab.</div></div>`:''}
   `:`
   <div style="display:flex;flex-wrap:wrap;gap:8px">
-    ${['All',...new Set(PRODUCTS.map(p=>p.category))].map(c=>`<button class="chip" style="flex-shrink:0" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
+    ${['All',...new Set(countryProducts().map(p=>p.category))].map(c=>`<button class="chip" style="flex-shrink:0" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
   </div>
   <div class="empty-state" style="padding-top:32px">
     <div class="empty-icon">🔎</div>
@@ -1281,12 +1488,15 @@ function attachListeners(){
   if(btnCancelEdit) btnCancelEdit.addEventListener('click',()=>{ S.showEditProfile=false; render(); });
   const btnSaveProfile=$('#btn-save-profile');
   if(btnSaveProfile) btnSaveProfile.addEventListener('click',()=>{
+    const prevCountry = profile.country;
     profile.country=$('#pf-country')?.value||profile.country;
     profile.chest=$('#pf-chest')?.value||'';
     profile.waist=$('#pf-waist')?.value||'';
     profile.hip=$('#pf-hip')?.value||'';
     profile.height=$('#pf-height')?.value||'';
     profile.shoe=$('#pf-shoe')?.value||'';
+    // Reset category filter if country changed so stale categories don't show
+    if(profile.country !== prevCountry) S.cat = 'All';
     saveUser(); toast('Changes saved ✓'); render();
   });
   const btnSignout=$('#btn-signout');

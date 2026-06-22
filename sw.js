@@ -1,5 +1,5 @@
-const CACHE = 'nexin-v34';
-const SHELL = ['./manifest.json','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./wordmark-dark.png','./favicon.png'];
+const CACHE = 'nexin-v36';
+const SHELL = ['./manifest.json','./icon-192.png','./icon-512.png','./icon-maskable-512.png','./wordmark-dark.png','./favicon.png','./favicon-32.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)));

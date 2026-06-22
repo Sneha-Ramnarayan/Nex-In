@@ -397,16 +397,15 @@ main { padding-top: calc(var(--header-h) + 16px); padding-left: 16px; padding-ri
 <body>
 <div id="app"></div>
 <div id="toast"></div>
-<div id="install-banner">
+<div id="install-banner" style="display:none">
   <img class="ib-icon" src="icon-192.png" alt="Nex-In"/>
   <div class="ib-text">
     <div class="ib-title">Install Nex-In</div>
-    <div class="ib-sub">Add to your home screen for the full app experience</div>
+    <div class="ib-sub" id="ib-sub">Add to home screen for the full app experience</div>
   </div>
-  <button class="ib-install" id="ib-install-btn">Install</button>
-  <button class="ib-close" id="ib-close-btn">×</button>
+  <button id="ib-install-btn" class="ib-install">Install</button>
+  <button id="ib-close-btn" class="ib-close">&#x2715;</button>
 </div>
-
 <script>
 (function(){
 'use strict';
@@ -1391,6 +1390,60 @@ if('serviceWorker' in navigator){
     if(sub) sub.textContent = 'Tap the Share icon \u2197, then \u201cAdd to Home Screen\u201d';
     if(instBtn) instBtn.textContent = 'Got it';
     setTimeout(function(){ if(banner) banner.style.display='flex'; }, 1200);
+  }
+})();
+</script>
+
+<script>
+/* ── Service worker ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js');
+  });
+}
+
+/* ── Install banner ── */
+(function() {
+  var KEY     = 'ni_ib_dismissed';
+  var banner  = document.getElementById('install-banner');
+  var sub     = document.getElementById('ib-sub');
+  var closeBtn= document.getElementById('ib-close-btn');
+  var instBtn = document.getElementById('ib-install-btn');
+  var deferred= null;
+
+  /* Dismiss: hide immediately + persist */
+  function dismiss() {
+    banner.style.display = 'none';
+    try { localStorage.setItem(KEY, '1'); } catch(e) {}
+  }
+
+  /* Show: only if not already dismissed or installed */
+  function tryShow() {
+    try { if (localStorage.getItem(KEY) === '1') return; } catch(e) {}
+    if (window.matchMedia('(display-mode: standalone)').matches) return;
+    if (window.navigator.standalone === true) return;
+    banner.style.display = 'flex';
+  }
+
+  /* Wire buttons — direct assignment, nothing can override */
+  closeBtn.onclick = dismiss;
+  instBtn.onclick  = function() {
+    if (deferred) { deferred.prompt(); deferred = null; }
+    dismiss();
+  };
+
+  /* Android/Chrome */
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferred = e;
+    setTimeout(tryShow, 1500);
+  });
+
+  /* iOS Safari */
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+    if (sub) sub.textContent = 'Tap Share ↗ then “Add to Home Screen”';
+    if (instBtn) instBtn.textContent = 'Got it';
+    setTimeout(tryShow, 1500);
   }
 })();
 </script>

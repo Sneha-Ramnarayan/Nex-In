@@ -221,7 +221,7 @@ img { display: block; max-width: 100%; }
 
 /* ── Main content ── */
 main { padding-top: calc(var(--header-h) + 16px); padding-left: 16px; padding-right: 16px; }
-.page-gap { display: flex; flex-direction: column; gap: 14px; padding-bottom: 16px; }
+.page-gap { display: flex; flex-direction: column; gap: 14px; padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom,0px) + 16px); }
 
 /* ── Product grid ── */
 .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -1344,6 +1344,24 @@ function buildProfile(){
     </div>
   </div>
 
+  <!-- Premium -->
+  <div class="premium-card">
+    <div class="flex items-center justify-between" style="margin-bottom:16px">
+      <div>
+        <div class="badge badge-gold" style="margin-bottom:8px">✦ Premium</div>
+        <div class="t-lg fw-7" style="color:#fff">${premium ? 'You\'re on Premium' : 'Upgrade to Premium'}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.55);margin-top:3px">${premium ? 'All features unlocked' : 'Unlock AI insights, price alerts & more'}</div>
+      </div>
+      <button class="btn btn-gold" id="btn-premium-profile" style="flex-shrink:0">${premium ? 'Manage' : 'Upgrade'}</button>
+    </div>
+    <div class="grid-2">
+      <div class="premium-feature"><div class="premium-feature-title">AI Fit Score</div><div class="premium-feature-desc">Precise sizing across every brand</div></div>
+      <div class="premium-feature"><div class="premium-feature-title">Price History</div><div class="premium-feature-desc">Know the best time to buy</div></div>
+      <div class="premium-feature"><div class="premium-feature-title">Drop Alerts</div><div class="premium-feature-desc">Instant price-drop notifications</div></div>
+      <div class="premium-feature"><div class="premium-feature-title">Style Match</div><div class="premium-feature-desc">Outfit ideas from your wardrobe</div></div>
+    </div>
+  </div>
+
   <!-- Save -->
   <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:24px">
     <button class="btn btn-dark w-full" id="btn-save-profile" style="height:52px;font-size:15px;border-radius:16px">Save Changes</button>
@@ -1473,6 +1491,10 @@ function attachListeners(){
   /* Discover premium btn */
   const btnPremium=$('#btn-premium');
   if(btnPremium) btnPremium.addEventListener('click',()=>{ premium=!premium; saveUser(); render(); });
+
+  /* Profile premium btn */
+  const btnPremiumProfile=$('#btn-premium-profile');
+  if(btnPremiumProfile) btnPremiumProfile.addEventListener('click',()=>{ premium=!premium; saveUser(); toast(premium?'✦ Premium activated!':'Premium deactivated'); render(); });
 
   /* Profile */
   const btnEditProfile=$('#btn-edit-profile');
